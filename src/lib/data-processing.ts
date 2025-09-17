@@ -64,6 +64,23 @@ export interface CounterpartyData {
   profitLoss: number;
 }
 
+export interface ProductData {
+  year: number;
+  month: number;
+  maturation: string;
+  n_hours: number;
+  energyVolumn: number;
+  sourceVolumn: number;
+  conVolumn: number;
+  nSubmarketVolumn: number;
+  neSubmarketVolumn: number;
+  seSubmarketVolumn: number;
+  sSubmarketVolumn: number;
+  faceValue: number;
+  mtm: number;
+  profitLoss: number;
+}
+
 export const MONTHS = [
   'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
   'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
@@ -138,6 +155,25 @@ export function processCounterpartyData(data: any[]): CounterpartyData[] {
     faceValue: parseFloat(row.faceValue) || 0,
     MtM: parseFloat(row.MtM) || 0,
     profitLoss: parseFloat(row.profitLoss) || 0,
+  }));
+}
+
+export function processProductData(data: any[]): ProductData[] {
+  return data.map(item => ({
+    year: parseInt(item.year) || 0,
+    month: parseInt(item.month) || 0,
+    maturation: item.maturation || '',
+    n_hours: parseFloat(item.n_hours) || 0,
+    energyVolumn: parseFloat(item.energyVolumn) || 0,
+    sourceVolumn: parseFloat(item.sourceVolumn) || 0,
+    conVolumn: parseFloat(item.conVolumn) || 0,
+    nSubmarketVolumn: parseFloat(item.nSubmarketVolumn) || 0,
+    neSubmarketVolumn: parseFloat(item.neSubmarketVolumn) || 0,
+    seSubmarketVolumn: parseFloat(item.seSubmarketVolumn) || 0,
+    sSubmarketVolumn: parseFloat(item.sSubmarketVolumn) || 0,
+    faceValue: parseFloat(item.faceValue) || 0,
+    mtm: parseFloat(item.mtm) || 0,
+    profitLoss: parseFloat(item.profitLoss) || 0,
   }));
 }
 
