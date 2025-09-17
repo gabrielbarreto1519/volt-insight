@@ -15,9 +15,6 @@ import {
 
 export function ProductPositionsTab() {
   const [year, setYear] = useState<number>(2025);
-  const [productDimension, setProductDimension] = useState<'energia' | 'fonte' | 'submercado'>('energia');
-  const [submarketType, setSubmarketType] = useState<'N' | 'NE' | 'SE' | 'S'>('N');
-  const [maturation, setMaturation] = useState<string | undefined>(undefined);
   const [productData, setProductData] = useState<ProductData[]>([]);
 
   useEffect(() => {
@@ -36,59 +33,63 @@ export function ProductPositionsTab() {
 
   // Filter data based on current selections
   const filteredData = productData.filter(item => {
-    if (item.year !== year) return false;
-    if (maturation && item.maturation !== maturation) return false;
-    return true;
+    return item.year === year;
   });
 
-  // Get available years and maturations for filters
+  // Get available years for filters
   const availableYears = [...new Set(productData.map(item => item.year))].sort();
-  const availableMaturations = [...new Set(productData.map(item => item.maturation))].sort();
 
-  // Prepare chart data based on product dimension
+  // Prepare volume chart data with all product types
   const getVolumeData = () => {
-    const monthlyData: { [key: number]: number } = {};
+    const monthlyData: { [key: number]: {
+      energia: number;
+      convencional: number;
+      incentivada: number;
+      seSubmarket: number;
+      sSubmarket: number;
+      neSubmarket: number;
+      nSubmarket: number;
+    } } = {};
     
     filteredData.forEach(item => {
-      if (!monthlyData[item.month]) monthlyData[item.month] = 0;
-      
-      switch (productDimension) {
-        case 'energia':
-          monthlyData[item.month] += item.energyVolumn;
-          break;
-        case 'fonte':
-          monthlyData[item.month] += item.sourceVolumn + item.conVolumn;
-          break;
-        case 'submercado':
-          switch (submarketType) {
-            case 'N':
-              monthlyData[item.month] += item.nSubmarketVolumn;
-              break;
-            case 'NE':
-              monthlyData[item.month] += item.neSubmarketVolumn;
-              break;
-            case 'SE':
-              monthlyData[item.month] += item.seSubmarketVolumn;
-              break;
-            case 'S':
-              monthlyData[item.month] += item.sSubmarketVolumn;
-              break;
-          }
-          break;
+      if (!monthlyData[item.month]) {
+        monthlyData[item.month] = {
+          energia: 0,
+          convencional: 0,
+          incentivada: 0,
+          seSubmarket: 0,
+          sSubmarket: 0,
+          neSubmarket: 0,
+          nSubmarket: 0,
+        };
       }
+      
+      monthlyData[item.month].energia += item.energyVolumn;
+      monthlyData[item.month].convencional += item.conVolumn;
+      monthlyData[item.month].incentivada += item.sourceVolumn;
+      monthlyData[item.month].seSubmarket += item.seSubmarketVolumn;
+      monthlyData[item.month].sSubmarket += item.sSubmarketVolumn;
+      monthlyData[item.month].neSubmarket += item.neSubmarketVolumn;
+      monthlyData[item.month].nSubmarket += item.nSubmarketVolumn;
     });
 
     return fillMissingMonths(
-      Object.entries(monthlyData).map(([month, volume]) => ({
+      Object.entries(monthlyData).map(([month, data]) => ({
         month: parseInt(month),
         year,
-        volume,
+        ...data,
       })),
       year,
-      { volume: 0 }
+      { energia: 0, convencional: 0, incentivada: 0, seSubmarket: 0, sSubmarket: 0, neSubmarket: 0, nSubmarket: 0 }
     ).map(item => ({
       month: item.month,
-      volume: item.volume,
+      energia: item.energia,
+      convencional: item.convencional,
+      incentivada: item.incentivada,
+      seSubmarket: item.seSubmarket,
+      sSubmarket: item.sSubmarket,
+      neSubmarket: item.neSubmarket,
+      nSubmarket: item.nSubmarket,
     }));
   };
 
@@ -159,59 +160,21 @@ export function ProductPositionsTab() {
   };
 
   // Calculate KPIs
-  const totalVolume = filteredData.reduce((sum, item) => {
-    switch (productDimension) {
-      case 'energia':
-        return sum + item.energyVolumn;
-      case 'fonte':
-        return sum + item.sourceVolumn + item.conVolumn;
-      case 'submercado':
-        switch (submarketType) {
-          case 'N':
-            return sum + item.nSubmarketVolumn;
-          case 'NE':
-            return sum + item.neSubmarketVolumn;
-          case 'SE':
-            return sum + item.seSubmarketVolumn;
-          case 'S':
-            return sum + item.sSubmarketVolumn;
-          default:
-            return sum;
-        }
-      default:
-        return sum;
-    }
-  }, 0);
-
   const totalExposure = filteredData.reduce((sum, item) => sum + item.faceValue, 0);
   const totalMtm = filteredData.reduce((sum, item) => sum + item.mtm, 0);
   const totalProfitLoss = filteredData.reduce((sum, item) => sum + item.profitLoss, 0);
 
-  const volumeUnit = productDimension === 'energia' ? 'MWm' : 'MWm';
-  const dimensionLabel = productDimension === 'energia' ? 'Energia' 
-    : productDimension === 'fonte' ? 'Fonte (Conv./Inc.)'
-    : `Submercado ${submarketType}`;
-
   return (
     <div className="space-y-6">
       <ProductFilters 
-        onFiltersChange={({ year, productDimension, submarketType, maturation }) => {
+        onFiltersChange={({ year }) => {
           setYear(year);
-          setProductDimension(productDimension);
-          if (submarketType) setSubmarketType(submarketType);
-          setMaturation(maturation);
         }}
         availableYears={availableYears}
-        availableMaturations={availableMaturations}
       />
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard
-          title="Volume Total"
-          value={formatNumber(totalVolume, 2)}
-          subtitle={`${volumeUnit} (${dimensionLabel})`}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KpiCard
           title="Exposição Total"
           value={formatCurrency(totalExposure)}
@@ -232,86 +195,131 @@ export function ProductPositionsTab() {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="space-y-6">
         <ChartContainer
-          title={`Volume do Produto - ${dimensionLabel}`}
-          description={`Evolução mensal do volume (${volumeUnit})`}
+          title="Volumes por Tipo de Produto"
+          description="Evolução mensal dos volumes por tipo de produto (MWm)"
+          className="w-full"
         >
           <FinancialLineChart
             data={getVolumeData()}
             lines={[
               {
-                dataKey: 'volume',
+                dataKey: 'energia',
                 stroke: 'hsl(var(--chart-1))',
-                name: 'Volume',
-                unit: volumeUnit,
+                name: 'Energia',
+                unit: 'MWm',
+                format: 'number',
+              },
+              {
+                dataKey: 'convencional',
+                stroke: 'hsl(var(--chart-2))',
+                name: 'Convencional',
+                unit: 'MWm',
+                format: 'number',
+              },
+              {
+                dataKey: 'incentivada',
+                stroke: 'hsl(var(--chart-3))',
+                name: 'Incentivada',
+                unit: 'MWm',
+                format: 'number',
+              },
+              {
+                dataKey: 'seSubmarket',
+                stroke: 'hsl(var(--chart-4))',
+                name: 'Sudeste/Centro-Oeste',
+                unit: 'MWm',
+                format: 'number',
+              },
+              {
+                dataKey: 'sSubmarket',
+                stroke: 'hsl(var(--chart-5))',
+                name: 'Sul',
+                unit: 'MWm',
+                format: 'number',
+              },
+              {
+                dataKey: 'neSubmarket',
+                stroke: 'hsl(var(--destructive))',
+                name: 'Nordeste',
+                unit: 'MWm',
+                format: 'number',
+              },
+              {
+                dataKey: 'nSubmarket',
+                stroke: 'hsl(var(--primary))',
+                name: 'Norte',
+                unit: 'MWm',
                 format: 'number',
               },
             ]}
-            height={300}
+            height={400}
             yAxisFormat="number"
           />
         </ChartContainer>
 
-        <ChartContainer
-          title="Exposição"
-          description="Evolução mensal do Face Value"
-        >
-          <FinancialLineChart
-            data={getExposureData()}
-            lines={[
-              {
-                dataKey: 'faceValue',
-                stroke: 'hsl(var(--chart-2))',
-                name: 'Face Value',
-                unit: 'R$',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <ChartContainer
+            title="Exposição"
+            description="Evolução mensal do Face Value"
+          >
+            <FinancialLineChart
+              data={getExposureData()}
+              lines={[
+                {
+                  dataKey: 'faceValue',
+                  stroke: 'hsl(var(--chart-2))',
+                  name: 'Face Value',
+                  unit: 'R$',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
 
-        <ChartContainer
-          title="Mark-to-Market (MtM)"
-          description="Evolução mensal do MtM"
-        >
-          <FinancialLineChart
-            data={getMtmData()}
-            lines={[
-              {
-                dataKey: 'mtm',
-                stroke: 'hsl(var(--profit))',
-                name: 'MtM',
-                unit: 'R$',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+          <ChartContainer
+            title="Mark-to-Market (MtM)"
+            description="Evolução mensal do MtM"
+          >
+            <FinancialLineChart
+              data={getMtmData()}
+              lines={[
+                {
+                  dataKey: 'mtm',
+                  stroke: 'hsl(var(--profit))',
+                  name: 'MtM',
+                  unit: 'R$',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
 
-        <ChartContainer
-          title="Profit and Loss (P&L)"
-          description="Evolução mensal do P&L"
-        >
-          <FinancialLineChart
-            data={getProfitLossData()}
-            lines={[
-              {
-                dataKey: 'profitLoss',
-                stroke: 'hsl(var(--loss))',
-                name: 'P&L',
-                unit: 'R$',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+          <ChartContainer
+            title="Profit and Loss (P&L)"
+            description="Evolução mensal do P&L"
+          >
+            <FinancialLineChart
+              data={getProfitLossData()}
+              lines={[
+                {
+                  dataKey: 'profitLoss',
+                  stroke: 'hsl(var(--loss))',
+                  name: 'P&L',
+                  unit: 'R$',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        </div>
       </div>
     </div>
   );
