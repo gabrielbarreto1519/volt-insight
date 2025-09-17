@@ -197,6 +197,36 @@ export function NetPositionsTab() {
           </ChartContainer>
         )}
 
+        {!shouldHidePhysicalCharts && (
+          <ChartContainer
+            title="Preços Médios"
+            description="Preço médio de compra e venda mensal"
+            className="w-full"
+          >
+            <FinancialLineChart
+              data={priceChartData}
+              lines={[
+                {
+                  dataKey: 'buyPrice',
+                  stroke: 'hsl(var(--chart-3))',
+                  name: 'Preço Compra',
+                  unit: 'R$/MWh',
+                  format: 'currency',
+                },
+                {
+                  dataKey: 'sellPrice',
+                  stroke: 'hsl(var(--chart-4))',
+                  name: 'Preço Venda',
+                  unit: 'R$/MWh',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        )}
+
         <ChartContainer
           title="Exposição (Face Value)"
           description="Exposição mensal da posição selecionada"
@@ -259,36 +289,6 @@ export function NetPositionsTab() {
             yAxisFormat="currency"
           />
         </ChartContainer>
-
-        {!shouldHidePhysicalCharts && (
-          <ChartContainer
-            title="Preços Médios"
-            description="Preço médio de compra e venda mensal"
-            className="w-full"
-          >
-            <FinancialLineChart
-              data={priceChartData}
-              lines={[
-                {
-                  dataKey: 'buyPrice',
-                  stroke: 'hsl(var(--chart-3))',
-                  name: 'Preço Compra',
-                  unit: 'R$/MWh',
-                  format: 'currency',
-                },
-                {
-                  dataKey: 'sellPrice',
-                  stroke: 'hsl(var(--chart-4))',
-                  name: 'Preço Venda',
-                  unit: 'R$/MWh',
-                  format: 'currency',
-                },
-              ]}
-              height={300}
-              yAxisFormat="currency"
-            />
-          </ChartContainer>
-        )}
       </div>
     </div>
   );
