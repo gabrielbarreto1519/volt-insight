@@ -51,8 +51,8 @@ export function MarketRiskTab() {
     
     return {
       varTotal,
-      energyVolume: currentYearData.energyVolumn,
       mtmTotal: currentYearData.faceValue, // Using faceValue as MtM Total
+      exposicaoTotal: currentYearData.faceValue, // Using faceValue as Exposição Total
       plTotal,
       energyPercentage,
       submarketPercentage,
@@ -173,11 +173,6 @@ export function MarketRiskTab() {
       {annualKPIs && (
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <KpiCard
-            title="Volume de Energia"
-            value={`${formatNumber(annualKPIs.energyVolume)} MW`}
-            trend="neutral"
-          />
-          <KpiCard
             title={`${isVaR ? 'VaR' : 'CVaR'} Total Anual`}
             value={formatCurrency(annualKPIs.varTotal)}
             trend="neutral"
@@ -185,6 +180,11 @@ export function MarketRiskTab() {
           <KpiCard
             title="MtM Total"
             value={formatCurrency(annualKPIs.mtmTotal)}
+            trend="neutral"
+          />
+          <KpiCard
+            title="Exposição Total"
+            value={formatCurrency(annualKPIs.exposicaoTotal)}
             trend="neutral"
           />
           <KpiCard
