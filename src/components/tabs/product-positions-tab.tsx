@@ -218,7 +218,7 @@ export function ProductPositionsTab() {
         {annualizedVolume !== null && (
           <KpiCard
             title="Volume Anualizado"
-            value={formatNumber(annualizedVolume, 0)}
+            value={formatNumber(annualizedVolume, 2)}
             subtitle="MWm"
           />
         )}
