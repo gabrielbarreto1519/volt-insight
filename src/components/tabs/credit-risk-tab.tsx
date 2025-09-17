@@ -120,7 +120,7 @@ export function CreditRiskTab() {
 
       {/* KPI Cards */}
       {annualKPIs && counterparty && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <KpiCard
             title="Exposição Acumulada"
             value={formatCurrency(Math.abs(annualKPIs.totalFaceValue))}
@@ -136,11 +136,6 @@ export function CreditRiskTab() {
             title="P&L Acumulado"
             value={formatCurrency(annualKPIs.totalPL)}
             trend={annualKPIs.totalPL >= 0 ? "up" : "down"}
-          />
-          <KpiCard
-            title="Volume Acumulado"
-            value={`${formatNumber(annualKPIs.totalVolume)} MWm`}
-            trend="neutral"
           />
         </div>
       )}
