@@ -225,6 +225,7 @@ export function MarketRiskTab() {
               },
             ]}
             height={400}
+            yAxisFormat="currency"
           />
         </ChartContainer>
 
@@ -255,6 +256,7 @@ export function MarketRiskTab() {
               },
             ]}
             height={400}
+            yAxisFormat="percent"
           />
         </ChartContainer>
 
@@ -279,6 +281,7 @@ export function MarketRiskTab() {
               },
             ]}
             height={400}
+            yAxisFormat="currency"
           />
         </ChartContainer>
 
@@ -300,6 +303,7 @@ export function MarketRiskTab() {
                 },
               ]}
                height={400}
+               yAxisFormat="number"
             />
           </ChartContainer>
         )}
@@ -328,6 +332,7 @@ export function MarketRiskTab() {
                 },
               ]}
                height={400}
+               yAxisFormat="number"
             />
           </ChartContainer>
         )}
@@ -369,7 +374,8 @@ export function MarketRiskTab() {
                   format: 'number',
                 },
               ]}
-              height={400}
+               height={400}
+               yAxisFormat="number"
             />
           </ChartContainer>
         )}

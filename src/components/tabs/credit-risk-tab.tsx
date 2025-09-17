@@ -163,6 +163,7 @@ export function CreditRiskTab() {
               },
             ]}
             height={400}
+            yAxisFormat="number"
           />
         </ChartContainer>
 
@@ -181,6 +182,7 @@ export function CreditRiskTab() {
               },
             ]}
             height={400}
+            yAxisFormat="currency"
           />
         </ChartContainer>
 
@@ -199,6 +201,7 @@ export function CreditRiskTab() {
               },
             ]}
             height={400}
+            yAxisFormat="currency"
           />
         </ChartContainer>
 
@@ -217,6 +220,7 @@ export function CreditRiskTab() {
               },
             ]}
             height={400}
+            yAxisFormat="currency"
           />
         </ChartContainer>
       </div>
