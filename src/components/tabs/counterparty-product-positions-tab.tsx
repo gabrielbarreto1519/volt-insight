@@ -217,7 +217,6 @@ export function CounterpartyProductPositionsTab() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold text-foreground">Exposições em Produtos por Contraparte</h2>
         <CounterpartyProductFilters
           counterparty={counterparty}
           setCounterparty={setCounterparty}

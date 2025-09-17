@@ -205,7 +205,7 @@ export function ProductPositionsTab() {
 
   return (
     <div className="space-y-6">
-      <ProductFilters 
+      <ProductFilters
         onFiltersChange={({ year, selectedProducts }) => {
           setYear(year);
           setSelectedProducts(selectedProducts);
