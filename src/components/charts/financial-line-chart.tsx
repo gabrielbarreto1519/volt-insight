@@ -19,11 +19,11 @@ interface FinancialLineChartProps {
   data: ChartData[];
   lines: LineConfig[];
   height?: number;
-  yAxisUnit?: string;
+  yAxisLabel?: string;
   yAxisFormat?: 'currency' | 'number' | 'percent';
 }
 
-const formatYAxisValue = (value: number, format?: 'currency' | 'number' | 'percent', unit?: string): string => {
+const formatYAxisValue = (value: number, format?: 'currency' | 'number' | 'percent'): string => {
   let formattedValue = '';
   
   switch (format) {
@@ -46,7 +46,7 @@ const formatYAxisValue = (value: number, format?: 'currency' | 'number' | 'perce
       break;
   }
   
-  return unit ? `${formattedValue} ${unit}` : formattedValue;
+  return formattedValue;
 };
 
 const formatValue = (value: number, format?: string, unit?: string): string => {
@@ -86,10 +86,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export function FinancialLineChart({ data, lines, height = 400, yAxisUnit, yAxisFormat }: FinancialLineChartProps) {
+export function FinancialLineChart({ data, lines, height = 400, yAxisLabel, yAxisFormat }: FinancialLineChartProps) {
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <LineChart data={data} margin={{ top: 5, right: 30, left: 50, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
         <XAxis 
           dataKey="month" 
@@ -98,7 +98,8 @@ export function FinancialLineChart({ data, lines, height = 400, yAxisUnit, yAxis
         />
         <YAxis 
           className="text-muted-foreground"
-          tickFormatter={(value) => formatYAxisValue(value, yAxisFormat, yAxisUnit)}
+          tickFormatter={(value) => formatYAxisValue(value, yAxisFormat)}
+          label={{ value: yAxisLabel || '', angle: -90, position: 'insideLeft' }}
         />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
