@@ -64,11 +64,22 @@ export function NetPositionsTab() {
 
   // Prepare volume chart data
   const volumeChartData = fillMissingMonths(
-    filteredPmixData.map(d => ({
-      month: d.month,
-      year: d.year,
-      volume: d.netVolumn,
-    })),
+    isFinancialMode 
+      ? // In financial mode, aggregate by month
+        Object.entries(
+          filteredPmixData.reduce((acc, d) => {
+            const key = d.month;
+            if (!acc[key]) acc[key] = { month: d.month, year: d.year, volume: 0 };
+            acc[key].volume += d.netVolumn || 0;
+            return acc;
+          }, {} as Record<number, { month: number; year: number; volume: number }>)
+        ).map(([_, data]) => data)
+      : // In physical mode, use filtered data as is
+        filteredPmixData.map(d => ({
+          month: d.month,
+          year: d.year,
+          volume: d.netVolumn,
+        })),
     parseInt(year),
     { volume: 0 }
   );
@@ -76,45 +87,105 @@ export function NetPositionsTab() {
 
   // Prepare price chart data
   const priceChartData = fillMissingMonths(
-    filteredPmixData.map(d => ({
-      month: d.month,
-      year: d.year,
-      buyPrice: d.buyPmix,
-      sellPrice: d.sellPmix,
-    })),
+    isFinancialMode
+      ? // In financial mode, aggregate by month (weighted average by volume)
+        Object.entries(
+          filteredPmixData.reduce((acc, d) => {
+            const key = d.month;
+            if (!acc[key]) {
+              acc[key] = { 
+                month: d.month, 
+                year: d.year, 
+                totalBuyValue: 0, 
+                totalSellValue: 0, 
+                totalVolume: 0 
+              };
+            }
+            const volume = d.netVolumn || 0;
+            acc[key].totalBuyValue += (d.buyPmix || 0) * volume;
+            acc[key].totalSellValue += (d.sellPmix || 0) * volume;
+            acc[key].totalVolume += volume;
+            return acc;
+          }, {} as Record<number, { month: number; year: number; totalBuyValue: number; totalSellValue: number; totalVolume: number }>)
+        ).map(([_, data]) => ({
+          month: data.month,
+          year: data.year,
+          buyPrice: data.totalVolume > 0 ? data.totalBuyValue / data.totalVolume : 0,
+          sellPrice: data.totalVolume > 0 ? data.totalSellValue / data.totalVolume : 0,
+        }))
+      : // In physical mode, use filtered data as is
+        filteredPmixData.map(d => ({
+          month: d.month,
+          year: d.year,
+          buyPrice: d.buyPmix,
+          sellPrice: d.sellPmix,
+        })),
     parseInt(year),
     { buyPrice: 0, sellPrice: 0 }
   );
 
   // Prepare MtM chart data
   const mtmChartData = fillMissingMonths(
-    filteredNetData.map(d => ({
-      month: d.month,
-      year: d.year,
-      mtm: d.MtM,
-    })),
+    isFinancialMode
+      ? // In financial mode, aggregate by month
+        Object.entries(
+          filteredNetData.reduce((acc, d) => {
+            const key = d.month;
+            if (!acc[key]) acc[key] = { month: d.month, year: d.year, mtm: 0 };
+            acc[key].mtm += d.MtM || 0;
+            return acc;
+          }, {} as Record<number, { month: number; year: number; mtm: number }>)
+        ).map(([_, data]) => data)
+      : // In physical mode, use filtered data as is
+        filteredNetData.map(d => ({
+          month: d.month,
+          year: d.year,
+          mtm: d.MtM,
+        })),
     parseInt(year),
     { mtm: 0 }
   );
 
   // Prepare P&L chart data
   const plChartData = fillMissingMonths(
-    filteredNetData.map(d => ({
-      month: d.month,
-      year: d.year,
-      profitLoss: d.profitLoss,
-    })),
+    isFinancialMode
+      ? // In financial mode, aggregate by month
+        Object.entries(
+          filteredNetData.reduce((acc, d) => {
+            const key = d.month;
+            if (!acc[key]) acc[key] = { month: d.month, year: d.year, profitLoss: 0 };
+            acc[key].profitLoss += d.profitLoss || 0;
+            return acc;
+          }, {} as Record<number, { month: number; year: number; profitLoss: number }>)
+        ).map(([_, data]) => data)
+      : // In physical mode, use filtered data as is
+        filteredNetData.map(d => ({
+          month: d.month,
+          year: d.year,
+          profitLoss: d.profitLoss,
+        })),
     parseInt(year),
     { profitLoss: 0 }
   );
 
   // Prepare Face Value chart data
   const faceValueChartData = fillMissingMonths(
-    filteredNetData.map(d => ({
-      month: d.month,
-      year: d.year,
-      faceValue: d.faceValue,
-    })),
+    isFinancialMode
+      ? // In financial mode, aggregate by month
+        Object.entries(
+          filteredNetData.reduce((acc, d) => {
+            const key = d.month;
+            if (!acc[key]) acc[key] = { month: d.month, year: d.year, faceValue: 0 };
+            acc[key].faceValue += d.faceValue || 0;
+            return acc;
+          }, {} as Record<number, { month: number; year: number; faceValue: number }>)
+        ).map(([_, data]) => data)
+      : // In physical mode, use filtered data as is
+        filteredNetData.map(d => ({
+          month: d.month,
+          year: d.year,
+          faceValue: d.faceValue,
+        })),
     parseInt(year),
     { faceValue: 0 }
   );
