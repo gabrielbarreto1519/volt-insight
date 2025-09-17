@@ -17,13 +17,18 @@ export function ProductPositionsTab() {
   const [year, setYear] = useState<number>(2025);
   const [selectedProducts, setSelectedProducts] = useState<string[]>(['todos']);
   const [productData, setProductData] = useState<ProductData[]>([]);
+  const [yearlyRiskData, setYearlyRiskData] = useState<any[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const rawData = await loadExcelFile('net_products.xlsx');
-        const processed = processProductData(rawData);
+        const [productRawData, yearlyRiskRawData] = await Promise.all([
+          loadExcelFile('net_products.xlsx'),
+          loadExcelFile('downside_risk_-_year.xlsx')
+        ]);
+        const processed = processProductData(productRawData);
         setProductData(processed);
+        setYearlyRiskData(yearlyRiskRawData);
       } catch (error) {
         console.error('Erro ao carregar dados de produtos:', error);
       }
@@ -165,6 +170,39 @@ export function ProductPositionsTab() {
   const totalMtm = filteredData.reduce((sum, item) => sum + item.mtm, 0);
   const totalProfitLoss = filteredData.reduce((sum, item) => sum + item.profitLoss, 0);
 
+  // Calculate annualized volume based on selected product
+  const getAnnualizedVolume = () => {
+    if (selectedProducts.includes('todos')) {
+      return null; // Don't show when "todos" is selected
+    }
+    
+    const currentYearData = yearlyRiskData.find(d => d.year === year);
+    if (!currentYearData) return null;
+
+    const selectedProduct = selectedProducts[0];
+    
+    switch (selectedProduct) {
+      case 'energia':
+        return currentYearData.energyVolumn || 0;
+      case 'convencional':
+        return currentYearData.conVolumn || 0;
+      case 'incentivada':
+        return currentYearData.sourceVolumn || 0;
+      case 'seSubmarket':
+        return currentYearData.seSubmarketVolumn || 0;
+      case 'sSubmarket':
+        return currentYearData.sSubmarketVolumn || 0;
+      case 'neSubmarket':
+        return currentYearData.neSubmarketVolumn || 0;
+      case 'nSubmarket':
+        return currentYearData.nSubmarketVolumn || 0;
+      default:
+        return null;
+    }
+  };
+
+  const annualizedVolume = getAnnualizedVolume();
+
   return (
     <div className="space-y-6">
       <ProductFilters 
@@ -176,7 +214,7 @@ export function ProductPositionsTab() {
       />
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className={`grid grid-cols-1 ${annualizedVolume !== null ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-4`}>
         <KpiCard
           title="Exposição Total"
           value={formatCurrency(totalExposure)}
@@ -194,6 +232,13 @@ export function ProductPositionsTab() {
           subtitle="Profit & Loss"
           trend={totalProfitLoss >= 0 ? "up" : "down"}
         />
+        {annualizedVolume !== null && (
+          <KpiCard
+            title="Volume Anualizado"
+            value={formatNumber(annualizedVolume, 0)}
+            subtitle="MWm"
+          />
+        )}
       </div>
 
       {/* Charts */}
