@@ -1,0 +1,82 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+
+interface EnergyFiltersProps {
+  energySource: string;
+  setEnergySource: (value: string) => void;
+  submarket: string;
+  setSubmarket: (value: string) => void;
+  year: string;
+  setYear: (value: string) => void;
+}
+
+const ENERGY_SOURCES = ["Convencional", "Incentivada 50%"];
+const SUBMARKETS = ["N", "NE", "SE", "S"];
+const YEARS = ["2025", "2026", "2027"];
+
+export function EnergyFilters({
+  energySource,
+  setEnergySource,
+  submarket,
+  setSubmarket,
+  year,
+  setYear,
+}: EnergyFiltersProps) {
+  return (
+    <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border">
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-muted-foreground">Fonte de Energia</label>
+        <Select value={energySource} onValueChange={setEnergySource}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Selecione a fonte" />
+          </SelectTrigger>
+          <SelectContent>
+            {ENERGY_SOURCES.map((source) => (
+              <SelectItem key={source} value={source}>
+                {source}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-muted-foreground">Submercado</label>
+        <Select value={submarket} onValueChange={setSubmarket}>
+          <SelectTrigger className="w-[150px]">
+            <SelectValue placeholder="Selecione o submercado" />
+          </SelectTrigger>
+          <SelectContent>
+            {SUBMARKETS.map((market) => (
+              <SelectItem key={market} value={market}>
+                {market}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-muted-foreground">Ano</label>
+        <Select value={year} onValueChange={setYear}>
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Selecione o ano" />
+          </SelectTrigger>
+          <SelectContent>
+            {YEARS.map((yr) => (
+              <SelectItem key={yr} value={yr}>
+                {yr}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-end gap-2">
+        <Badge variant="outline" className="text-primary border-primary">
+          {energySource} | {submarket} | {year}
+        </Badge>
+      </div>
+    </div>
+  );
+}
