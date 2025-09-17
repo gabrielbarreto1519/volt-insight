@@ -38,13 +38,13 @@ const Index = () => {
               <Package className="w-4 h-4" />
               Posições em Produtos
             </TabsTrigger>
-            <TabsTrigger value="market-risk" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Risco de Mercado
-            </TabsTrigger>
             <TabsTrigger value="credit-risk" className="flex items-center gap-2">
               <Shield className="w-4 h-4" />
               Posições Bilaterais
+            </TabsTrigger>
+            <TabsTrigger value="market-risk" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Risco de Mercado
             </TabsTrigger>
           </TabsList>
 
@@ -56,12 +56,12 @@ const Index = () => {
             <ProductPositionsTab />
           </TabsContent>
 
-          <TabsContent value="market-risk" className="space-y-6">
-            <MarketRiskTab />
-          </TabsContent>
-
           <TabsContent value="credit-risk" className="space-y-6">
             <CreditRiskTab />
+          </TabsContent>
+
+          <TabsContent value="market-risk" className="space-y-6">
+            <MarketRiskTab />
           </TabsContent>
         </Tabs>
       </main>
