@@ -13,7 +13,7 @@ interface RiskFiltersProps {
 }
 
 const YEARS = ["2025", "2026", "2027"];
-const PRODUTOS = ["Energia", "Fonte", "Submercado", "Swaps"];
+const PRODUTOS = ["Energia", "Fonte", "Submercado"];
 
 export function RiskFilters({
   year,

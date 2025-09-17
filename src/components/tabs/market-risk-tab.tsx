@@ -65,7 +65,7 @@ export function MarketRiskTab() {
       case 'Energia': return prefix + 'energy';
       case 'Fonte': return prefix + 'source';
       case 'Submercado': return prefix + 'submarket';
-      default: return prefix + 'total';
+      default: return prefix + 'energy'; // fallback to energy
     }
   };
 
