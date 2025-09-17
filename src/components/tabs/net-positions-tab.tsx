@@ -54,12 +54,6 @@ export function NetPositionsTab() {
     { volume: 0 }
   );
 
-  // Add annual consolidated line
-  const annualAverage = filteredPmixData.reduce((sum, d) => sum + d.netVolumn, 0) / 12;
-  const volumeDataWithConsolidated = volumeChartData.map(d => ({
-    ...d,
-    consolidated: annualAverage,
-  }));
 
   // Prepare price chart data
   const priceChartData = fillMissingMonths(
@@ -112,23 +106,15 @@ export function NetPositionsTab() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartContainer
           title="Volumes de Energia"
-          description="Volume líquido mensal com posição consolidada anual"
+          description="Volume líquido mensal"
         >
           <FinancialLineChart
-            data={volumeDataWithConsolidated}
+            data={volumeChartData}
             lines={[
               {
                 dataKey: 'volume',
                 stroke: 'hsl(var(--chart-1))',
                 name: 'Volume Líquido',
-                unit: 'MW',
-                format: 'number',
-              },
-              {
-                dataKey: 'consolidated',
-                stroke: 'hsl(var(--chart-2))',
-                strokeDasharray: '5 5',
-                name: 'Posição Anual',
                 unit: 'MW',
                 format: 'number',
               },
