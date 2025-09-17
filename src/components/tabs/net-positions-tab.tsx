@@ -9,6 +9,7 @@ export function NetPositionsTab() {
   const [energySource, setEnergySource] = useState('Convencional');
   const [submarket, setSubmarket] = useState('N');
   const [year, setYear] = useState('2025');
+  const [isFinancialMode, setIsFinancialMode] = useState(false);
   
   const [pmixData, setPmixData] = useState<PmixData[]>([]);
   const [netData, setNetData] = useState<NetPosition[]>([]);
@@ -31,23 +32,35 @@ export function NetPositionsTab() {
     loadData();
   }, []);
 
-  // Filter data based on selections with support for "Todas" options
+  // Filter data based on selections with support for financial mode
   const filteredPmixData = pmixData.filter(d => {
     const yearMatch = d.year === parseInt(year);
-    const energyMatch = energySource === 'Todas as Fontes' || d.energySourceDescription === energySource;
-    const submarketMatch = submarket === 'Todos os Submercados' || d.submarketDescription === submarket;
-    return yearMatch && energyMatch && submarketMatch;
+    if (isFinancialMode) {
+      // In financial mode, include all energy sources and submarkets
+      return yearMatch;
+    } else {
+      // In physical mode, filter by specific energy source and submarket
+      const energyMatch = d.energySourceDescription === energySource;
+      const submarketMatch = d.submarketDescription === submarket;
+      return yearMatch && energyMatch && submarketMatch;
+    }
   });
 
   const filteredNetData = netData.filter(d => {
     const yearMatch = d.year === parseInt(year);
-    const energyMatch = energySource === 'Todas as Fontes' || d.energySourceDescription === energySource;
-    const submarketMatch = submarket === 'Todos os Submercados' || d.submarketDescription === submarket;
-    return yearMatch && energyMatch && submarketMatch;
+    if (isFinancialMode) {
+      // In financial mode, include all energy sources and submarkets
+      return yearMatch;
+    } else {
+      // In physical mode, filter by specific energy source and submarket
+      const energyMatch = d.energySourceDescription === energySource;
+      const submarketMatch = d.submarketDescription === submarket;
+      return yearMatch && energyMatch && submarketMatch;
+    }
   });
 
-  // Check if we should hide the average prices chart (when "Todas" options are selected)
-  const shouldHidePricesChart = energySource === 'Todas as Fontes' || submarket === 'Todos os Submercados';
+  // Check if we should hide physical charts (volume and prices) in financial mode
+  const shouldHidePhysicalCharts = isFinancialMode;
 
   // Prepare volume chart data
   const volumeChartData = fillMissingMonths(
@@ -106,14 +119,10 @@ export function NetPositionsTab() {
     { faceValue: 0 }
   );
 
-  // Get available options from data for dynamic filters
+  // Get available options from data for dynamic filters (excluding "Todas" options)
   const availableYears = [...new Set([...pmixData.map(d => d.year.toString()), ...netData.map(d => d.year.toString())])].sort();
   const availableEnergySource = [...new Set([...pmixData.map(d => d.energySourceDescription), ...netData.map(d => d.energySourceDescription)])].filter(Boolean);
   const availableSubmarkets = [...new Set([...pmixData.map(d => d.submarketDescription), ...netData.map(d => d.submarketDescription)])].filter(Boolean);
-
-  // Add "Todas" options to dynamic lists
-  const energySourceOptions = [...availableEnergySource, "Todas as Fontes"];
-  const submarketOptions = [...availableSubmarkets, "Todos os Submercados"];
 
   // Calculate annual KPIs
   const totalVolume = filteredPmixData.reduce((sum, item) => sum + (item.netVolumn || 0), 0);
@@ -124,7 +133,9 @@ export function NetPositionsTab() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold text-foreground">Posições Líquidas</h2>
+        <h2 className="text-2xl font-bold text-foreground">
+          {isFinancialMode ? 'Posições Financeiras' : 'Posições Líquidas'}
+        </h2>
         <EnergyFilters
           energySource={energySource}
           setEnergySource={setEnergySource}
@@ -132,9 +143,11 @@ export function NetPositionsTab() {
           setSubmarket={setSubmarket}
           year={year}
           setYear={setYear}
+          isFinancialMode={isFinancialMode}
+          setIsFinancialMode={setIsFinancialMode}
           availableYears={availableYears}
-          availableEnergySource={energySourceOptions}
-          availableSubmarkets={submarketOptions}
+          availableEnergySource={availableEnergySource}
+          availableSubmarkets={availableSubmarkets}
         />
       </div>
 
@@ -161,26 +174,28 @@ export function NetPositionsTab() {
       </div>
 
       <div className="space-y-6">
-        <ChartContainer
-          title="Volumes de Energia"
-          description="Volume líquido mensal"
-          className="w-full"
-        >
-          <FinancialLineChart
-            data={volumeChartData}
-            lines={[
-              {
-                dataKey: 'volume',
-                stroke: 'hsl(var(--chart-1))',
-                name: 'Volume Líquido',
-                unit: 'MWm',
-                format: 'number',
-              },
-            ]}
-            height={300}
-            yAxisFormat="number"
-          />
-        </ChartContainer>
+        {!shouldHidePhysicalCharts && (
+          <ChartContainer
+            title="Volumes de Energia"
+            description="Volume líquido mensal"
+            className="w-full"
+          >
+            <FinancialLineChart
+              data={volumeChartData}
+              lines={[
+                {
+                  dataKey: 'volume',
+                  stroke: 'hsl(var(--chart-1))',
+                  name: 'Volume Líquido',
+                  unit: 'MWm',
+                  format: 'number',
+                },
+              ]}
+              height={300}
+              yAxisFormat="number"
+            />
+          </ChartContainer>
+        )}
 
         <ChartContainer
           title="Exposição (Face Value)"
@@ -245,7 +260,7 @@ export function NetPositionsTab() {
           />
         </ChartContainer>
 
-        {!shouldHidePricesChart && (
+        {!shouldHidePhysicalCharts && (
           <ChartContainer
             title="Preços Médios"
             description="Preço médio de compra e venda mensal"
