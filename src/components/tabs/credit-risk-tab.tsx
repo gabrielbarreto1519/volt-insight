@@ -36,10 +36,11 @@ export function CreditRiskTab() {
   }, []);
 
   // Filter data based on selections
-  const filteredData = counterpartyData.filter(d => 
-    d.counterparty === counterparty &&
-    d.year === parseInt(year)
-  );
+  const filteredData = counterpartyData.filter(d => {
+    const matchesCounterparty = d.counterparty === counterparty;
+    const matchesYear = year === 'Todos' || d.year === parseInt(year);
+    return matchesCounterparty && matchesYear;
+  });
 
   // Get available options from data for dynamic filters
   const availableYears = [...new Set(counterpartyData.map(d => d.year.toString()))].sort();
@@ -62,9 +63,10 @@ export function CreditRiskTab() {
   };
 
   const annualKPIs = getAnnualKPIs();
+  const showCharts = year !== 'Todos';
 
-  // Prepare chart data
-  const netPositionChartData = fillMissingMonths(
+  // Prepare chart data only when showing charts
+  const netPositionChartData = showCharts ? fillMissingMonths(
     filteredData.map(d => ({
       month: d.month,
       year: d.year,
@@ -72,9 +74,9 @@ export function CreditRiskTab() {
     })),
     parseInt(year),
     { netVolume: 0 }
-  );
+  ) : [];
 
-  const faceValueChartData = fillMissingMonths(
+  const faceValueChartData = showCharts ? fillMissingMonths(
     filteredData.map(d => ({
       month: d.month,
       year: d.year,
@@ -82,9 +84,9 @@ export function CreditRiskTab() {
     })),
     parseInt(year),
     { faceValue: 0 }
-  );
+  ) : [];
 
-  const mtmChartData = fillMissingMonths(
+  const mtmChartData = showCharts ? fillMissingMonths(
     filteredData.map(d => ({
       month: d.month,
       year: d.year,
@@ -92,9 +94,9 @@ export function CreditRiskTab() {
     })),
     parseInt(year),
     { mtm: 0 }
-  );
+  ) : [];
 
-  const plChartData = fillMissingMonths(
+  const plChartData = showCharts ? fillMissingMonths(
     filteredData.map(d => ({
       month: d.month,
       year: d.year,
@@ -102,7 +104,7 @@ export function CreditRiskTab() {
     })),
     parseInt(year),
     { profitLoss: 0 }
-  );
+  ) : [];
 
   return (
     <div className="space-y-6">
@@ -140,85 +142,87 @@ export function CreditRiskTab() {
         </div>
       )}
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 gap-6">
-        <ChartContainer
-          title="Posição Líquida por Contraparte"
-          description="Volume líquido mensal da contraparte selecionada"
-        >
-          <FinancialLineChart
-            data={netPositionChartData}
-            lines={[
-              {
-                dataKey: 'netVolume',
-                stroke: 'hsl(var(--chart-1))',
-                name: 'Volume Líquido',
-                unit: 'MWm',
-                format: 'number',
-              },
-            ]}
-            height={400}
-            yAxisFormat="number"
-          />
-        </ChartContainer>
+      {/* Charts - Only show when year is not "Todos" */}
+      {showCharts && (
+        <div className="grid grid-cols-1 gap-6">
+          <ChartContainer
+            title="Posição Líquida por Contraparte"
+            description="Volume líquido mensal da contraparte selecionada"
+          >
+            <FinancialLineChart
+              data={netPositionChartData}
+              lines={[
+                {
+                  dataKey: 'netVolume',
+                  stroke: 'hsl(var(--chart-1))',
+                  name: 'Volume Líquido',
+                  unit: 'MWm',
+                  format: 'number',
+                },
+              ]}
+              height={400}
+              yAxisFormat="number"
+            />
+          </ChartContainer>
 
-        <ChartContainer
-          title="Exposição (Face Value) por Mês"
-          description="Face value mensal da contraparte"
-        >
-          <FinancialLineChart
-            data={faceValueChartData}
-            lines={[
-              {
-                dataKey: 'faceValue',
-                stroke: 'hsl(var(--chart-2))',
-                name: 'Face Value',
-                format: 'currency',
-              },
-            ]}
-            height={400}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+          <ChartContainer
+            title="Exposição (Face Value) por Mês"
+            description="Face value mensal da contraparte"
+          >
+            <FinancialLineChart
+              data={faceValueChartData}
+              lines={[
+                {
+                  dataKey: 'faceValue',
+                  stroke: 'hsl(var(--chart-2))',
+                  name: 'Face Value',
+                  format: 'currency',
+                },
+              ]}
+              height={400}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
 
-        <ChartContainer
-          title="Marcação a Mercado"
-          description="MtM mensal da contraparte selecionada"
-        >
-          <FinancialLineChart
-            data={mtmChartData}
-            lines={[
-              {
-                dataKey: 'mtm',
-                stroke: 'hsl(var(--profit))',
-                name: 'MtM',
-                format: 'currency',
-              },
-            ]}
-            height={400}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+          <ChartContainer
+            title="Marcação a Mercado"
+            description="MtM mensal da contraparte selecionada"
+          >
+            <FinancialLineChart
+              data={mtmChartData}
+              lines={[
+                {
+                  dataKey: 'mtm',
+                  stroke: 'hsl(var(--profit))',
+                  name: 'MtM',
+                  format: 'currency',
+                },
+              ]}
+              height={400}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
 
-        <ChartContainer
-          title="Profit and Loss"
-          description="P&L mensal da contraparte selecionada"
-        >
-          <FinancialLineChart
-            data={plChartData}
-            lines={[
-              {
-                dataKey: 'profitLoss',
-                stroke: 'hsl(var(--loss))',
-                name: 'P&L',
-                format: 'currency',
-              },
-            ]}
-            height={400}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
-      </div>
+          <ChartContainer
+            title="Profit and Loss"
+            description="P&L mensal da contraparte selecionada"
+          >
+            <FinancialLineChart
+              data={plChartData}
+              lines={[
+                {
+                  dataKey: 'profitLoss',
+                  stroke: 'hsl(var(--loss))',
+                  name: 'P&L',
+                  format: 'currency',
+                },
+              ]}
+              height={400}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        </div>
+      )}
 
     </div>
   );

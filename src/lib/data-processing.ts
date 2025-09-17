@@ -82,6 +82,29 @@ export interface ProductData {
   profitLoss: number;
 }
 
+export interface CounterpartyProductData {
+  counterparty: string;
+  counterpartyCode: string;
+  contractualNature: string;
+  year: number;
+  month: number;
+  maturation: string;
+  n_hours: number;
+  energyVolumn: number;
+  sourceVolumn: number;
+  conVolumn: number;
+  seSubmarketVolumn: number;
+  sSubmarketVolumn: number;
+  nSubmarketVolumn: number;
+  neSubmarketVolumn: number;
+  faceValue: number;
+  mtm: number;
+  mtmEnergy: number;
+  mtmSource: number;
+  mtmSubmarket: number;
+  profitLoss: number;
+}
+
 export const MONTHS = [
   'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
   'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
@@ -175,6 +198,31 @@ export function processProductData(data: any[]): ProductData[] {
     sSubmarketVolumn: parseFloat(item.sSubmarketVolumn) || 0,
     faceValue: parseFloat(item.faceValue) || 0,
     mtm: parseFloat(item.mtm) || 0,
+    profitLoss: parseFloat(item.profitLoss) || 0,
+  }));
+}
+
+export function processCounterpartyProductData(data: any[]): CounterpartyProductData[] {
+  return data.map(item => ({
+    counterparty: item.counterparty || '',
+    counterpartyCode: item.counterpartyCode || '',
+    contractualNature: item.contractualNature || '',
+    year: parseInt(item.year) || 0,
+    month: parseInt(item.month) || 0,
+    maturation: item.maturation || '',
+    n_hours: parseFloat(item.n_hours) || 0,
+    energyVolumn: parseFloat(item.energyVolumn) || 0,
+    sourceVolumn: parseFloat(item.sourceVolumn) || 0,
+    conVolumn: parseFloat(item.conVolumn) || 0,
+    seSubmarketVolumn: parseFloat(item.seSubmarketVolumn) || 0,
+    sSubmarketVolumn: parseFloat(item.sSubmarketVolumn) || 0,
+    nSubmarketVolumn: parseFloat(item.nSubmarketVolumn) || 0,
+    neSubmarketVolumn: parseFloat(item.neSubmarketVolumn) || 0,
+    faceValue: parseFloat(item.faceValue) || 0,
+    mtm: parseFloat(item.mtm) || 0,
+    mtmEnergy: parseFloat(item.mtmEnergy) || 0,
+    mtmSource: parseFloat(item.mtmSource) || 0,
+    mtmSubmarket: parseFloat(item.mtmSubmarket) || 0,
     profitLoss: parseFloat(item.profitLoss) || 0,
   }));
 }

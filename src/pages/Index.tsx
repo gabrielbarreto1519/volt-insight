@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NetPositionsTab } from '@/components/tabs/net-positions-tab';
 import { ProductPositionsTab } from '@/components/tabs/product-positions-tab';
+import { CounterpartyProductPositionsTab } from '@/components/tabs/counterparty-product-positions-tab';
 import { MarketRiskTab } from '@/components/tabs/market-risk-tab';
 import { CreditRiskTab } from '@/components/tabs/credit-risk-tab';
 import { BarChart3, Package, TrendingUp, Shield } from 'lucide-react';
@@ -29,7 +30,7 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="positions" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="positions" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               Posições Líquidas
@@ -37,6 +38,10 @@ const Index = () => {
             <TabsTrigger value="product-positions" className="flex items-center gap-2">
               <Package className="w-4 h-4" />
               Posições em Produtos
+            </TabsTrigger>
+            <TabsTrigger value="counterparty-product-positions" className="flex items-center gap-2">
+              <Package className="w-4 h-4" />
+              Exposições por Contraparte
             </TabsTrigger>
             <TabsTrigger value="credit-risk" className="flex items-center gap-2">
               <Shield className="w-4 h-4" />
@@ -54,6 +59,10 @@ const Index = () => {
 
           <TabsContent value="product-positions" className="space-y-6">
             <ProductPositionsTab />
+          </TabsContent>
+
+          <TabsContent value="counterparty-product-positions" className="space-y-6">
+            <CounterpartyProductPositionsTab />
           </TabsContent>
 
           <TabsContent value="credit-risk" className="space-y-6">

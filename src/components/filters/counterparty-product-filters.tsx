@@ -1,33 +1,25 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-interface CounterpartyFiltersProps {
+interface CounterpartyProductFiltersProps {
   counterparty: string;
   setCounterparty: (value: string) => void;
   year: string;
   setYear: (value: string) => void;
-  submarket?: string;
-  setSubmarket?: (value: string) => void;
   availableCounterparties: string[];
-  availableYears?: string[];
+  availableYears: string[];
 }
 
-const YEARS = ["2025", "2026", "2027"];
-const YEARS_WITH_ALL = ["Todos", ...YEARS];
-const SUBMARKETS = ["N", "NE", "SE", "S"];
-
-export function CounterpartyFilters({
+export function CounterpartyProductFilters({
   counterparty,
   setCounterparty,
   year,
   setYear,
-  submarket,
-  setSubmarket,
   availableCounterparties,
   availableYears,
-}: CounterpartyFiltersProps) {
-  // Use dynamic data when available, fallback to hardcoded values with "Todos" option
-  const years = availableYears ? ["Todos", ...availableYears] : YEARS_WITH_ALL;
+}: CounterpartyProductFiltersProps) {
+  const yearsWithAll = ["Todos", ...availableYears];
+  
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border">
       <div className="flex flex-col gap-2">
@@ -53,7 +45,7 @@ export function CounterpartyFilters({
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
           <SelectContent>
-            {years.map((yr) => (
+            {yearsWithAll.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
               </SelectItem>
@@ -61,7 +53,6 @@ export function CounterpartyFilters({
           </SelectContent>
         </Select>
       </div>
-
 
       <div className="flex items-end gap-2">
         <Badge variant="outline" className="text-primary border-primary">
