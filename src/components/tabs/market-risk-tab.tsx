@@ -44,6 +44,7 @@ export function MarketRiskTab() {
     if (!currentYearData) return null;
     
     const varTotal = isVaR ? currentYearData.VaR_total : currentYearData.CVaR_total;
+    const plTotal = isVaR ? currentYearData.profitLossTotal_VaR : currentYearData.profitLossTotal_CVaR;
     const energyPercentage = isVaR ? currentYearData.percentageVaRenergy : currentYearData.percentageCVaRenergy;
     const submarketPercentage = isVaR ? currentYearData.percentageVaRsubmarket : currentYearData.percentageCVaRsubmarket;
     const sourcePercentage = isVaR ? currentYearData.percentageVaRsource : currentYearData.percentageCVaRsource;
@@ -52,6 +53,7 @@ export function MarketRiskTab() {
       varTotal,
       energyVolume: currentYearData.energyVolumn,
       mtmTotal: currentYearData.faceValue, // Using faceValue as MtM Total
+      plTotal,
       energyPercentage,
       submarketPercentage,
       sourcePercentage,
@@ -169,7 +171,7 @@ export function MarketRiskTab() {
 
       {/* KPIs Anuais */}
       {annualKPIs && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <KpiCard
             title="Volume de Energia"
             value={`${formatNumber(annualKPIs.energyVolume)} MW`}
@@ -184,6 +186,11 @@ export function MarketRiskTab() {
             title="MtM Total"
             value={formatCurrency(annualKPIs.mtmTotal)}
             trend="neutral"
+          />
+          <KpiCard
+            title="P&L Estressado"
+            value={formatCurrency(annualKPIs.plTotal)}
+            trend={annualKPIs.plTotal >= 0 ? "up" : "down"}
           />
           <KpiCard
             title="Distribuição de Risco"
