@@ -51,8 +51,8 @@ export function MarketRiskTab() {
     
     return {
       varTotal,
-      mtmTotal: currentYearData.faceValue, // Using faceValue as MtM Total
-      exposicaoTotal: currentYearData.faceValue, // Using faceValue as Exposição Total
+      mtmTotal: currentYearData.faceValue || 0, // MtM Total
+      exposicaoTotal: currentYearData.faceValue || 0, // Exposição Total usando faceValue da planilha downside risk - year
       plTotal,
       energyPercentage,
       submarketPercentage,
