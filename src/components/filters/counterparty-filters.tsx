@@ -57,28 +57,10 @@ export function CounterpartyFilters({
         </Select>
       </div>
 
-      {setSubmarket && (
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-muted-foreground">Submercado (Opcional)</label>
-          <Select value={submarket || ""} onValueChange={setSubmarket}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Selecione o submercado" />
-            </SelectTrigger>
-            <SelectContent>
-              {SUBMARKETS.map((market) => (
-                <SelectItem key={market} value={market}>
-                  {market}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
 
       <div className="flex items-end gap-2">
         <Badge variant="outline" className="text-primary border-primary">
           {counterparty} | {year}
-          {submarket && ` | ${submarket}`}
         </Badge>
       </div>
     </div>

@@ -8,7 +8,6 @@ import { loadExcelFile, processCounterpartyData, fillMissingMonths, Counterparty
 export function CreditRiskTab() {
   const [counterparty, setCounterparty] = useState('');
   const [year, setYear] = useState('2025');
-  const [submarket, setSubmarket] = useState('');
   
   const [counterpartyData, setCounterpartyData] = useState<CounterpartyData[]>([]);
   const [availableCounterparties, setAvailableCounterparties] = useState<string[]>([]);
@@ -39,8 +38,7 @@ export function CreditRiskTab() {
   // Filter data based on selections
   const filteredData = counterpartyData.filter(d => 
     d.counterparty === counterparty &&
-    d.year === parseInt(year) &&
-    (!submarket || d.submarketDescription === submarket)
+    d.year === parseInt(year)
   );
 
   // Calculate annual KPIs for selected counterparty and year
@@ -112,8 +110,6 @@ export function CreditRiskTab() {
           setCounterparty={setCounterparty}
           year={year}
           setYear={setYear}
-          submarket={submarket}
-          setSubmarket={setSubmarket}
           availableCounterparties={availableCounterparties}
         />
       </div>
@@ -221,18 +217,6 @@ export function CreditRiskTab() {
         </ChartContainer>
       </div>
 
-      {/* Optional breakdown by submarket - could be added as mini charts */}
-      {submarket && (
-        <div className="mt-8">
-          <h3 className="text-lg font-semibold text-foreground mb-4">
-            Quebra por Submercado: {submarket}
-          </h3>
-          <div className="text-sm text-muted-foreground">
-            Dados filtrados para o submercado selecionado. 
-            Para visualização detalhada por submercado, remova o filtro opcional.
-          </div>
-        </div>
-      )}
     </div>
   );
 }
