@@ -37,14 +37,16 @@ export function ProductFilters({ onFiltersChange, availableYears }: ProductFilte
     if (value === 'todos') {
       setSelectedProducts(['todos']);
     } else {
-      const newSelection = selectedProducts.includes('todos') 
-        ? [value]
-        : selectedProducts.includes(value)
-          ? selectedProducts.filter(p => p !== value)
-          : [...selectedProducts, value];
-      
-      setSelectedProducts(newSelection.length === 0 ? ['todos'] : newSelection);
+      setSelectedProducts([value]);
     }
+  };
+
+  const getDisplayValue = () => {
+    if (selectedProducts.includes('todos')) {
+      return 'Todos';
+    }
+    const selected = productOptions.find(option => selectedProducts.includes(option.value));
+    return selected ? selected.label : 'Selecione um produto';
   };
 
   return (
@@ -72,19 +74,20 @@ export function ProductFilters({ onFiltersChange, availableYears }: ProductFilte
           
           <div className="space-y-2">
             <Label htmlFor="products">Produtos</Label>
-            <div className="flex flex-wrap gap-2">
-              {productOptions.map((option) => (
-                <label key={option.value} className="flex items-center space-x-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={selectedProducts.includes(option.value)}
-                    onChange={() => handleProductChange(option.value)}
-                    className="rounded border-border"
-                  />
-                  <span>{option.label}</span>
-                </label>
-              ))}
-            </div>
+            <Select value={selectedProducts[0] || 'todos'} onValueChange={handleProductChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione os produtos">
+                  {getDisplayValue()}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="bg-background border-border z-50">
+                {productOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </CardContent>
