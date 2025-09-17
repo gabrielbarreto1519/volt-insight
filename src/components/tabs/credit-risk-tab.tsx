@@ -146,7 +146,7 @@ export function CreditRiskTab() {
       )}
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <ChartContainer
           title="Posição Líquida por Contraparte"
           description="Volume líquido mensal da contraparte selecionada"
@@ -162,7 +162,7 @@ export function CreditRiskTab() {
                 format: 'number',
               },
             ]}
-            height={300}
+            height={400}
           />
         </ChartContainer>
 
@@ -180,7 +180,7 @@ export function CreditRiskTab() {
                 format: 'currency',
               },
             ]}
-            height={300}
+            height={400}
           />
         </ChartContainer>
 
@@ -198,7 +198,7 @@ export function CreditRiskTab() {
                 format: 'currency',
               },
             ]}
-            height={300}
+            height={400}
           />
         </ChartContainer>
 
@@ -216,7 +216,7 @@ export function CreditRiskTab() {
                 format: 'currency',
               },
             ]}
-            height={300}
+            height={400}
           />
         </ChartContainer>
       </div>

@@ -202,7 +202,7 @@ export function MarketRiskTab() {
       )}
 
       {/* Gráficos Mensais */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <ChartContainer
           title={`Exposição/Risco por Produto - ${produto}`}
           description={`${isVaR ? 'VaR95' : 'CVaR95'} mensal com linha total`}
@@ -224,7 +224,7 @@ export function MarketRiskTab() {
                 format: 'currency',
               },
             ]}
-            height={300}
+            height={400}
           />
         </ChartContainer>
 
@@ -254,7 +254,7 @@ export function MarketRiskTab() {
                 format: 'percent',
               },
             ]}
-            height={300}
+            height={400}
           />
         </ChartContainer>
 
@@ -278,7 +278,7 @@ export function MarketRiskTab() {
                 format: 'currency',
               },
             ]}
-            height={300}
+            height={400}
           />
         </ChartContainer>
 
@@ -299,7 +299,7 @@ export function MarketRiskTab() {
                   format: 'number',
                 },
               ]}
-              height={300}
+               height={400}
             />
           </ChartContainer>
         )}
@@ -327,7 +327,7 @@ export function MarketRiskTab() {
                   format: 'number',
                 },
               ]}
-              height={300}
+               height={400}
             />
           </ChartContainer>
         )}
@@ -369,7 +369,7 @@ export function MarketRiskTab() {
                   format: 'number',
                 },
               ]}
-              height={300}
+              height={400}
             />
           </ChartContainer>
         )}
