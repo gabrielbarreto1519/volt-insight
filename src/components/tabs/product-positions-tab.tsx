@@ -259,67 +259,68 @@ export function ProductPositionsTab() {
           />
         </ChartContainer>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <ChartContainer
-            title="Exposição"
-            description="Evolução mensal do Face Value"
-          >
-            <FinancialLineChart
-              data={getExposureData()}
-              lines={[
-                {
-                  dataKey: 'faceValue',
-                  stroke: 'hsl(var(--chart-2))',
-                  name: 'Face Value',
-                  unit: 'R$',
-                  format: 'currency',
-                },
-              ]}
-              height={300}
-              yAxisFormat="currency"
-            />
-          </ChartContainer>
+        <ChartContainer
+          title="Exposição"
+          description="Evolução mensal do Face Value"
+          className="w-full"
+        >
+          <FinancialLineChart
+            data={getExposureData()}
+            lines={[
+              {
+                dataKey: 'faceValue',
+                stroke: 'hsl(var(--chart-2))',
+                name: 'Face Value',
+                unit: 'R$',
+                format: 'currency',
+              },
+            ]}
+            height={300}
+            yAxisFormat="currency"
+          />
+        </ChartContainer>
 
-          <ChartContainer
-            title="Mark-to-Market (MtM)"
-            description="Evolução mensal do MtM"
-          >
-            <FinancialLineChart
-              data={getMtmData()}
-              lines={[
-                {
-                  dataKey: 'mtm',
-                  stroke: 'hsl(var(--profit))',
-                  name: 'MtM',
-                  unit: 'R$',
-                  format: 'currency',
-                },
-              ]}
-              height={300}
-              yAxisFormat="currency"
-            />
-          </ChartContainer>
+        <ChartContainer
+          title="Mark-to-Market (MtM)"
+          description="Evolução mensal do MtM"
+          className="w-full"
+        >
+          <FinancialLineChart
+            data={getMtmData()}
+            lines={[
+              {
+                dataKey: 'mtm',
+                stroke: 'hsl(var(--profit))',
+                name: 'MtM',
+                unit: 'R$',
+                format: 'currency',
+              },
+            ]}
+            height={300}
+            yAxisFormat="currency"
+          />
+        </ChartContainer>
 
-          <ChartContainer
-            title="Profit and Loss (P&L)"
-            description="Evolução mensal do P&L"
-          >
-            <FinancialLineChart
-              data={getProfitLossData()}
-              lines={[
-                {
-                  dataKey: 'profitLoss',
-                  stroke: 'hsl(var(--loss))',
-                  name: 'P&L',
-                  unit: 'R$',
-                  format: 'currency',
-                },
-              ]}
-              height={300}
-              yAxisFormat="currency"
-            />
-          </ChartContainer>
-        </div>
+        <ChartContainer
+          title="Profit and Loss (P&L)"
+          description="Evolução mensal do P&L"
+          className="w-full"
+        >
+          <FinancialLineChart
+            data={getProfitLossData()}
+            lines={[
+              {
+                dataKey: 'profitLoss',
+                stroke: 'hsl(var(--loss))',
+                name: 'P&L',
+                unit: 'R$',
+                format: 'currency',
+              },
+            ]}
+            height={300}
+            yAxisFormat="currency"
+          />
+        </ChartContainer>
       </div>
     </div>
   );
