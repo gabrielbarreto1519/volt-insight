@@ -182,35 +182,26 @@ export function NetPositionsTab() {
           />
         </ChartContainer>
 
-        {!shouldHidePricesChart && (
-          <ChartContainer
-            title="Preços Médios"
-            description="Preço médio de compra e venda mensal"
-            className="w-full"
-          >
-            <FinancialLineChart
-              data={priceChartData}
-              lines={[
-                {
-                  dataKey: 'buyPrice',
-                  stroke: 'hsl(var(--chart-3))',
-                  name: 'Preço Compra',
-                  unit: 'R$/MWh',
-                  format: 'currency',
-                },
-                {
-                  dataKey: 'sellPrice',
-                  stroke: 'hsl(var(--chart-4))',
-                  name: 'Preço Venda',
-                  unit: 'R$/MWh',
-                  format: 'currency',
-                },
-              ]}
-              height={300}
-              yAxisFormat="currency"
-            />
-          </ChartContainer>
-        )}
+        <ChartContainer
+          title="Exposição (Face Value)"
+          description="Exposição mensal da posição selecionada"
+          className="w-full"
+        >
+          <FinancialLineChart
+            data={faceValueChartData}
+            lines={[
+              {
+                dataKey: 'faceValue',
+                stroke: 'hsl(var(--chart-2))',
+                name: 'Face Value',
+                unit: 'R$',
+                format: 'currency',
+              },
+            ]}
+            height={300}
+            yAxisFormat="currency"
+          />
+        </ChartContainer>
 
         <ChartContainer
           title="Marcação a Mercado"
@@ -254,26 +245,35 @@ export function NetPositionsTab() {
           />
         </ChartContainer>
 
-        <ChartContainer
-          title="Exposição (Face Value)"
-          description="Exposição mensal da posição selecionada"
-          className="w-full"
-        >
-          <FinancialLineChart
-            data={faceValueChartData}
-            lines={[
-              {
-                dataKey: 'faceValue',
-                stroke: 'hsl(var(--chart-2))',
-                name: 'Face Value',
-                unit: 'R$',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+        {!shouldHidePricesChart && (
+          <ChartContainer
+            title="Preços Médios"
+            description="Preço médio de compra e venda mensal"
+            className="w-full"
+          >
+            <FinancialLineChart
+              data={priceChartData}
+              lines={[
+                {
+                  dataKey: 'buyPrice',
+                  stroke: 'hsl(var(--chart-3))',
+                  name: 'Preço Compra',
+                  unit: 'R$/MWh',
+                  format: 'currency',
+                },
+                {
+                  dataKey: 'sellPrice',
+                  stroke: 'hsl(var(--chart-4))',
+                  name: 'Preço Venda',
+                  unit: 'R$/MWh',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        )}
       </div>
     </div>
   );
