@@ -9,6 +9,7 @@ interface CounterpartyFiltersProps {
   submarket?: string;
   setSubmarket?: (value: string) => void;
   availableCounterparties: string[];
+  availableYears?: string[];
 }
 
 const YEARS = ["2025", "2026", "2027"];
@@ -22,7 +23,10 @@ export function CounterpartyFilters({
   submarket,
   setSubmarket,
   availableCounterparties,
+  availableYears,
 }: CounterpartyFiltersProps) {
+  // Use dynamic data when available, fallback to hardcoded values
+  const years = availableYears || YEARS;
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border">
       <div className="flex flex-col gap-2">
@@ -48,7 +52,7 @@ export function CounterpartyFilters({
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
           <SelectContent>
-            {YEARS.map((yr) => (
+            {years.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
               </SelectItem>

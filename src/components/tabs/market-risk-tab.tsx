@@ -35,6 +35,10 @@ export function MarketRiskTab() {
   const filteredMonthlyData = monthlyRiskData.filter(d => d.year === parseInt(year));
   const currentYearData = yearlyRiskData.find(d => d.year === parseInt(year));
 
+  // Get available options from data for dynamic filters
+  const availableYears = [...new Set([...monthlyRiskData.map(d => d.year.toString()), ...yearlyRiskData.map(d => d.year?.toString())])].filter(Boolean).sort();
+  const availableProdutos = ['Energia', 'Fonte', 'Submercado']; // These are based on the data structure
+
   // Get annual KPIs
   const getAnnualKPIs = () => {
     if (!currentYearData) return null;
@@ -160,6 +164,8 @@ export function MarketRiskTab() {
           setProduto={setProduto}
           isVaR={isVaR}
           setIsVaR={setIsVaR}
+          availableYears={availableYears}
+          availableProdutos={availableProdutos}
         />
       </div>
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { EnergyFilters } from '@/components/filters/energy-filters';
 import { ChartContainer } from '@/components/ui/chart-container';
+import { KpiCard } from '@/components/ui/kpi-card';
 import { FinancialLineChart } from '@/components/charts/financial-line-chart';
-import { loadExcelFile, processPmixData, processNetData, fillMissingMonths, PmixData, NetPosition } from '@/lib/data-processing';
+import { loadExcelFile, processPmixData, processNetData, fillMissingMonths, formatCurrency, formatNumber, PmixData, NetPosition } from '@/lib/data-processing';
 
 export function NetPositionsTab() {
   const [energySource, setEnergySource] = useState('Convencional');
@@ -89,6 +90,18 @@ export function NetPositionsTab() {
     { profitLoss: 0 }
   );
 
+  // Get available options from data for dynamic filters
+  const availableYears = [...new Set([...pmixData.map(d => d.year.toString()), ...netData.map(d => d.year.toString())])].sort();
+  const availableEnergySource = [...new Set([...pmixData.map(d => d.energySourceDescription), ...netData.map(d => d.energySourceDescription)])].filter(Boolean);
+  const availableSubmarkets = [...new Set([...pmixData.map(d => d.submarketDescription), ...netData.map(d => d.submarketDescription)])].filter(Boolean);
+
+  // Calculate annual KPIs
+  const totalVolume = filteredPmixData.reduce((sum, item) => sum + (item.netVolumn || 0), 0);
+  const totalMtM = filteredNetData.reduce((sum, item) => sum + (item.MtM || 0), 0);
+  const totalProfitLoss = filteredNetData.reduce((sum, item) => sum + (item.profitLoss || 0), 0);
+  // Note: faceValue não está disponível nos dados atuais, usando volume como proxy para exposição
+  const totalExposure = totalVolume;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4">
@@ -100,6 +113,37 @@ export function NetPositionsTab() {
           setSubmarket={setSubmarket}
           year={year}
           setYear={setYear}
+          availableYears={availableYears}
+          availableEnergySource={availableEnergySource}
+          availableSubmarkets={availableSubmarkets}
+        />
+      </div>
+
+      {/* KPIs Anuais */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <KpiCard
+          title="Exposição Total"
+          value={formatNumber(totalExposure)}
+          subtitle="Volume Total (MWm)"
+          trend="neutral"
+        />
+        <KpiCard
+          title="MtM Total"
+          value={formatCurrency(totalMtM)}
+          subtitle="Marcação a Mercado"
+          trend={totalMtM >= 0 ? "up" : "down"}
+        />
+        <KpiCard
+          title="Resultado Total"
+          value={formatCurrency(totalProfitLoss)}
+          subtitle="P&L Consolidado"
+          trend={totalProfitLoss >= 0 ? "up" : "down"}
+        />
+        <KpiCard
+          title="Volume Total"
+          value={formatNumber(totalVolume)}
+          subtitle="Volume Líquido (MWm)"
+          trend="neutral"
         />
       </div>
 

@@ -10,6 +10,8 @@ interface RiskFiltersProps {
   setProduto: (value: string) => void;
   isVaR: boolean;
   setIsVaR: (value: boolean) => void;
+  availableYears?: string[];
+  availableProdutos?: string[];
 }
 
 const YEARS = ["2025", "2026", "2027"];
@@ -22,7 +24,12 @@ export function RiskFilters({
   setProduto,
   isVaR,
   setIsVaR,
+  availableYears,
+  availableProdutos,
 }: RiskFiltersProps) {
+  // Use dynamic data when available, fallback to hardcoded values
+  const years = availableYears || YEARS;
+  const produtos = availableProdutos || PRODUTOS;
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border">
       <div className="flex flex-col gap-2">
@@ -32,7 +39,7 @@ export function RiskFilters({
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
           <SelectContent>
-            {YEARS.map((yr) => (
+            {years.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
               </SelectItem>
@@ -48,7 +55,7 @@ export function RiskFilters({
             <SelectValue placeholder="Selecione o produto" />
           </SelectTrigger>
           <SelectContent>
-            {PRODUTOS.map((prod) => (
+            {produtos.map((prod) => (
               <SelectItem key={prod} value={prod}>
                 {prod}
               </SelectItem>

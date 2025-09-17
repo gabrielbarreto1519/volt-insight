@@ -41,6 +41,9 @@ export function CreditRiskTab() {
     d.year === parseInt(year)
   );
 
+  // Get available options from data for dynamic filters
+  const availableYears = [...new Set(counterpartyData.map(d => d.year.toString()))].sort();
+
   // Calculate annual KPIs for selected counterparty and year
   const getAnnualKPIs = () => {
     if (!counterparty || filteredData.length === 0) return null;
@@ -111,6 +114,7 @@ export function CreditRiskTab() {
           year={year}
           setYear={setYear}
           availableCounterparties={availableCounterparties}
+          availableYears={availableYears}
         />
       </div>
 

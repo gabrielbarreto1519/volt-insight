@@ -8,6 +8,9 @@ interface EnergyFiltersProps {
   setSubmarket: (value: string) => void;
   year: string;
   setYear: (value: string) => void;
+  availableYears?: string[];
+  availableEnergySource?: string[];
+  availableSubmarkets?: string[];
 }
 
 const ENERGY_SOURCES = ["Convencional", "Incentivada 50%"];
@@ -21,7 +24,14 @@ export function EnergyFilters({
   setSubmarket,
   year,
   setYear,
+  availableYears,
+  availableEnergySource,
+  availableSubmarkets,
 }: EnergyFiltersProps) {
+  // Use dynamic data when available, fallback to hardcoded values
+  const energySources = availableEnergySource || ENERGY_SOURCES;
+  const submarkets = availableSubmarkets || SUBMARKETS;
+  const years = availableYears || YEARS;
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border">
       <div className="flex flex-col gap-2">
@@ -31,7 +41,7 @@ export function EnergyFilters({
             <SelectValue placeholder="Selecione a fonte" />
           </SelectTrigger>
           <SelectContent>
-            {ENERGY_SOURCES.map((source) => (
+            {energySources.map((source) => (
               <SelectItem key={source} value={source}>
                 {source}
               </SelectItem>
@@ -47,7 +57,7 @@ export function EnergyFilters({
             <SelectValue placeholder="Selecione o submercado" />
           </SelectTrigger>
           <SelectContent>
-            {SUBMARKETS.map((market) => (
+            {submarkets.map((market) => (
               <SelectItem key={market} value={market}>
                 {market}
               </SelectItem>
@@ -63,7 +73,7 @@ export function EnergyFilters({
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
           <SelectContent>
-            {YEARS.map((yr) => (
+            {years.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
               </SelectItem>
