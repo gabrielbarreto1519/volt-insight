@@ -120,13 +120,7 @@ export function NetPositionsTab() {
       </div>
 
       {/* KPIs Anuais */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <KpiCard
-          title="Exposição Total"
-          value={formatNumber(totalExposure)}
-          subtitle="Volume Total (MWm)"
-          trend="neutral"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KpiCard
           title="MtM Total"
           value={formatCurrency(totalMtM)}
