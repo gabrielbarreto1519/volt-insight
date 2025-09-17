@@ -26,7 +26,10 @@ export function ProductPositionsTab() {
           loadExcelFile('net_products.xlsx'),
           loadExcelFile('downside_risk_-_year.xlsx')
         ]);
+        console.log('ProductPositionsTab - Raw product data sample:', productRawData.slice(0, 3));
+        console.log('ProductPositionsTab - Raw yearly risk data sample:', yearlyRiskRawData.slice(0, 3));
         const processed = processProductData(productRawData);
+        console.log('ProductPositionsTab - Processed data sample:', processed.slice(0, 3));
         setProductData(processed);
         setYearlyRiskData(yearlyRiskRawData);
       } catch (error) {

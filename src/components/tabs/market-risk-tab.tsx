@@ -21,7 +21,12 @@ export function MarketRiskTab() {
           loadExcelFile('downside_risk_-_year.xlsx')
         ]);
         
-        setMonthlyRiskData(processRiskData(monthlyRaw));
+        console.log('MarketRiskTab - Raw monthly data sample:', monthlyRaw.slice(0, 3));
+        console.log('MarketRiskTab - Raw yearly data sample:', yearlyRaw.slice(0, 3));
+        const processedMonthly = processRiskData(monthlyRaw);
+        console.log('MarketRiskTab - Processed monthly data sample:', processedMonthly.slice(0, 3));
+        
+        setMonthlyRiskData(processedMonthly);
         setYearlyRiskData(yearlyRaw);
       } catch (error) {
         console.error('Erro ao carregar dados de risco:', error);

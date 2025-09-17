@@ -4,6 +4,7 @@ import { NetPositionsWithSubtabs } from '@/components/tabs/net-positions-with-su
 import { CreditRiskWithSubtabs } from '@/components/tabs/credit-risk-with-subtabs';
 import { MarketRiskTab } from '@/components/tabs/market-risk-tab';
 import { BarChart3, Shield, TrendingUp } from 'lucide-react';
+import { DebugData } from '@/components/debug-data';
 
 const Index = () => {
   return (
@@ -27,6 +28,8 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        <DebugData />
+        
         <Tabs defaultValue="positions" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="positions" className="flex items-center gap-2">
