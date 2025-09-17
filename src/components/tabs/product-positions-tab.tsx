@@ -223,7 +223,7 @@ export function ProductPositionsTab() {
               ...(selectedProducts.includes('todos') || selectedProducts.includes('incentivada') ? [{
                 dataKey: 'incentivada' as const,
                 stroke: 'hsl(var(--chart-3))',
-                name: 'Incentivada',
+                name: 'Incentivada 50%',
                 unit: 'MWm',
                 format: 'number' as const,
               }] : []),

@@ -19,7 +19,7 @@ export function ProductFilters({ onFiltersChange, availableYears }: ProductFilte
     { value: 'todos', label: 'Todos' },
     { value: 'energia', label: 'Energia' },
     { value: 'convencional', label: 'Convencional' },
-    { value: 'incentivada', label: 'Incentivada' },
+    { value: 'incentivada', label: 'Incentivada 50%' },
     { value: 'seSubmarket', label: 'Sudeste/Centro-Oeste' },
     { value: 'sSubmarket', label: 'Sul' },
     { value: 'neSubmarket', label: 'Nordeste' },
