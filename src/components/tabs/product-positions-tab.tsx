@@ -215,6 +215,13 @@ export function ProductPositionsTab() {
 
       {/* KPIs */}
       <div className={`grid grid-cols-1 ${annualizedVolume !== null ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-4`}>
+        {annualizedVolume !== null && (
+          <KpiCard
+            title="Volume Anualizado"
+            value={formatNumber(annualizedVolume, 0)}
+            subtitle="MWm"
+          />
+        )}
         <KpiCard
           title="Exposição Total"
           value={formatCurrency(totalExposure)}
@@ -232,13 +239,6 @@ export function ProductPositionsTab() {
           subtitle="Profit & Loss"
           trend={totalProfitLoss >= 0 ? "up" : "down"}
         />
-        {annualizedVolume !== null && (
-          <KpiCard
-            title="Volume Anualizado"
-            value={formatNumber(annualizedVolume, 0)}
-            subtitle="MWm"
-          />
-        )}
       </div>
 
       {/* Charts */}
