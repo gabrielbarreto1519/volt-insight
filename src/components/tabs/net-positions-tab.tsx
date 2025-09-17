@@ -115,12 +115,11 @@ export function NetPositionsTab() {
                 dataKey: 'volume',
                 stroke: 'hsl(var(--chart-1))',
                 name: 'Volume Líquido',
-                unit: 'MW',
+                unit: 'MWm',
                 format: 'number',
               },
             ]}
             height={300}
-            yAxisLabel="MWm"
             yAxisFormat="number"
           />
         </ChartContainer>
@@ -148,7 +147,6 @@ export function NetPositionsTab() {
               },
             ]}
             height={300}
-            yAxisLabel="R$/MWh"
             yAxisFormat="currency"
           />
         </ChartContainer>
@@ -164,11 +162,11 @@ export function NetPositionsTab() {
                 dataKey: 'mtm',
                 stroke: 'hsl(var(--profit))',
                 name: 'MtM',
+                unit: 'R$',
                 format: 'currency',
               },
             ]}
             height={300}
-            yAxisLabel="R$"
             yAxisFormat="currency"
           />
         </ChartContainer>
@@ -184,11 +182,11 @@ export function NetPositionsTab() {
                 dataKey: 'profitLoss',
                 stroke: 'hsl(var(--loss))',
                 name: 'P&L',
+                unit: 'R$',
                 format: 'currency',
               },
             ]}
             height={300}
-            yAxisLabel="R$"
             yAxisFormat="currency"
           />
         </ChartContainer>
