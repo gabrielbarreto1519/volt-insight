@@ -120,6 +120,8 @@ export function NetPositionsTab() {
               },
             ]}
             height={300}
+            yAxisUnit="MWm"
+            yAxisFormat="number"
           />
         </ChartContainer>
 
@@ -146,6 +148,8 @@ export function NetPositionsTab() {
               },
             ]}
             height={300}
+            yAxisUnit="R$/MWh"
+            yAxisFormat="currency"
           />
         </ChartContainer>
 
@@ -164,6 +168,8 @@ export function NetPositionsTab() {
               },
             ]}
             height={300}
+            yAxisUnit="R$"
+            yAxisFormat="currency"
           />
         </ChartContainer>
 
@@ -182,6 +188,8 @@ export function NetPositionsTab() {
               },
             ]}
             height={300}
+            yAxisUnit="R$"
+            yAxisFormat="currency"
           />
         </ChartContainer>
       </div>

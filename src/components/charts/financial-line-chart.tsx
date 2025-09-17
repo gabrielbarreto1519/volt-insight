@@ -19,7 +19,35 @@ interface FinancialLineChartProps {
   data: ChartData[];
   lines: LineConfig[];
   height?: number;
+  yAxisUnit?: string;
+  yAxisFormat?: 'currency' | 'number' | 'percent';
 }
+
+const formatYAxisValue = (value: number, format?: 'currency' | 'number' | 'percent', unit?: string): string => {
+  let formattedValue = '';
+  
+  switch (format) {
+    case 'currency':
+      // For currency values, use shorter format for Y axis
+      if (Math.abs(value) >= 1000000) {
+        formattedValue = formatNumber(value / 1000000, 1) + 'M';
+      } else if (Math.abs(value) >= 1000) {
+        formattedValue = formatNumber(value / 1000, 1) + 'K';
+      } else {
+        formattedValue = formatNumber(value, 0);
+      }
+      break;
+    case 'percent':
+      formattedValue = formatNumber(value * 100, 1) + '%';
+      break;
+    case 'number':
+    default:
+      formattedValue = formatNumber(value, 0);
+      break;
+  }
+  
+  return unit ? `${formattedValue} ${unit}` : formattedValue;
+};
 
 const formatValue = (value: number, format?: string, unit?: string): string => {
   let formattedValue = '';
@@ -58,7 +86,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export function FinancialLineChart({ data, lines, height = 400 }: FinancialLineChartProps) {
+export function FinancialLineChart({ data, lines, height = 400, yAxisUnit, yAxisFormat }: FinancialLineChartProps) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -70,7 +98,7 @@ export function FinancialLineChart({ data, lines, height = 400 }: FinancialLineC
         />
         <YAxis 
           className="text-muted-foreground"
-          tickFormatter={(value) => formatNumber(value, 0)}
+          tickFormatter={(value) => formatYAxisValue(value, yAxisFormat, yAxisUnit)}
         />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
