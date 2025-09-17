@@ -111,6 +111,10 @@ export function NetPositionsTab() {
   const availableEnergySource = [...new Set([...pmixData.map(d => d.energySourceDescription), ...netData.map(d => d.energySourceDescription)])].filter(Boolean);
   const availableSubmarkets = [...new Set([...pmixData.map(d => d.submarketDescription), ...netData.map(d => d.submarketDescription)])].filter(Boolean);
 
+  // Add "Todas" options to dynamic lists
+  const energySourceOptions = [...availableEnergySource, "Todas as Fontes"];
+  const submarketOptions = [...availableSubmarkets, "Todos os Submercados"];
+
   // Calculate annual KPIs
   const totalVolume = filteredPmixData.reduce((sum, item) => sum + (item.netVolumn || 0), 0);
   const totalMtM = filteredNetData.reduce((sum, item) => sum + (item.MtM || 0), 0);
@@ -129,8 +133,8 @@ export function NetPositionsTab() {
           year={year}
           setYear={setYear}
           availableYears={availableYears}
-          availableEnergySource={availableEnergySource}
-          availableSubmarkets={availableSubmarkets}
+          availableEnergySource={energySourceOptions}
+          availableSubmarkets={submarketOptions}
         />
       </div>
 

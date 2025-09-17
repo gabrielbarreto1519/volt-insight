@@ -40,7 +40,7 @@ export function EnergyFilters({
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="Selecione a fonte" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-background border-border z-50">
             {energySources.map((source) => (
               <SelectItem key={source} value={source}>
                 {source}
@@ -56,7 +56,7 @@ export function EnergyFilters({
           <SelectTrigger className="w-[150px]">
             <SelectValue placeholder="Selecione o submercado" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-background border-border z-50">
             {submarkets.map((market) => (
               <SelectItem key={market} value={market}>
                 {market}
@@ -72,7 +72,7 @@ export function EnergyFilters({
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-background border-border z-50">
             {years.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
