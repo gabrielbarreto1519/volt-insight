@@ -139,7 +139,7 @@ export function CreditRiskTab() {
           />
           <KpiCard
             title="Volume Acumulado"
-            value={`${formatNumber(annualKPIs.totalVolume)} MW`}
+            value={`${formatNumber(annualKPIs.totalVolume)} MWm`}
             trend="neutral"
           />
         </div>
@@ -158,7 +158,7 @@ export function CreditRiskTab() {
                 dataKey: 'netVolume',
                 stroke: 'hsl(var(--chart-1))',
                 name: 'Volume Líquido',
-                unit: 'MW',
+                unit: 'MWm',
                 format: 'number',
               },
             ]}
