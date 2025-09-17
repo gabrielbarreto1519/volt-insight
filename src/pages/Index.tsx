@@ -44,7 +44,7 @@ const Index = () => {
             </TabsTrigger>
             <TabsTrigger value="credit-risk" className="flex items-center gap-2">
               <Shield className="w-4 h-4" />
-              Risco de Crédito
+              Posições Bilaterais
             </TabsTrigger>
           </TabsList>
 
