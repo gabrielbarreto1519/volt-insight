@@ -44,16 +44,14 @@ export function MarketRiskTab() {
     if (!currentYearData) return null;
     
     const varTotal = isVaR ? currentYearData.VaR_total : currentYearData.CVaR_total;
-    const plTotal = isVaR ? currentYearData.profitLossTotal_VaR : currentYearData.profitLossTotal_CVaR;
     const energyPercentage = isVaR ? currentYearData.percentageVaRenergy : currentYearData.percentageCVaRenergy;
     const submarketPercentage = isVaR ? currentYearData.percentageVaRsubmarket : currentYearData.percentageCVaRsubmarket;
     const sourcePercentage = isVaR ? currentYearData.percentageVaRsource : currentYearData.percentageCVaRsource;
     
     return {
       varTotal,
-      plTotal,
       energyVolume: currentYearData.energyVolumn,
-      faceValue: currentYearData.faceValue,
+      mtmTotal: currentYearData.faceValue, // Using faceValue as MtM Total
       energyPercentage,
       submarketPercentage,
       sourcePercentage,
@@ -77,8 +75,8 @@ export function MarketRiskTab() {
     filteredMonthlyData.map(d => ({
       month: d.month,
       year: d.year,
-      productRisk: Math.abs(d[getProductFieldName() as keyof RiskData] as number),
-      totalRisk: Math.abs(isVaR ? d.VaR_total : d.CVaR_total),
+      productRisk: d[getProductFieldName() as keyof RiskData] as number,
+      totalRisk: isVaR ? d.VaR_total : d.CVaR_total,
     })),
     parseInt(year),
     { productRisk: 0, totalRisk: 0 }
@@ -103,7 +101,7 @@ export function MarketRiskTab() {
       month: d.month,
       year: d.year,
       profitLoss: isVaR ? d.profitLossTotal_VaR : d.profitLossTotal_CVaR,
-      riskMeasure: Math.abs(isVaR ? d.VaR_total : d.CVaR_total),
+      riskMeasure: isVaR ? d.VaR_total : d.CVaR_total,
     })),
     parseInt(year),
     { profitLoss: 0, riskMeasure: 0 }
@@ -171,29 +169,24 @@ export function MarketRiskTab() {
 
       {/* KPIs Anuais */}
       {annualKPIs && (
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-          <KpiCard
-            title={`${isVaR ? 'VaR' : 'CVaR'} Total Anual`}
-            value={formatCurrency(Math.abs(annualKPIs.varTotal))}
-            trend="neutral"
-          />
-          <KpiCard
-            title="P&L Total Estressado"
-            value={formatCurrency(annualKPIs.plTotal)}
-            trend={annualKPIs.plTotal >= 0 ? "up" : "down"}
-          />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <KpiCard
             title="Volume de Energia"
             value={`${formatNumber(annualKPIs.energyVolume)} MW`}
             trend="neutral"
           />
           <KpiCard
-            title="Exposição (Face Value)"
-            value={formatCurrency(annualKPIs.faceValue)}
+            title={`${isVaR ? 'VaR' : 'CVaR'} Total Anual`}
+            value={formatCurrency(annualKPIs.varTotal)}
             trend="neutral"
           />
           <KpiCard
-            title="% Contribuição Energia"
+            title="MtM Total"
+            value={formatCurrency(annualKPIs.mtmTotal)}
+            trend="neutral"
+          />
+          <KpiCard
+            title="Distribuição de Risco"
             value={formatPercent(annualKPIs.energyPercentage)}
             subtitle={`Submercado: ${formatPercent(annualKPIs.submarketPercentage)} | Fonte: ${formatPercent(annualKPIs.sourcePercentage)}`}
             trend="neutral"
