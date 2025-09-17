@@ -13,8 +13,8 @@ interface EnergyFiltersProps {
   availableSubmarkets?: string[];
 }
 
-const ENERGY_SOURCES = ["Convencional", "Incentivada 50%"];
-const SUBMARKETS = ["N", "NE", "SE", "S"];
+const ENERGY_SOURCES = ["Convencional", "Incentivada 50%", "Todas as Fontes"];
+const SUBMARKETS = ["N", "NE", "SE", "S", "Todos os Submercados"];
 const YEARS = ["2025", "2026", "2027"];
 
 export function EnergyFilters({

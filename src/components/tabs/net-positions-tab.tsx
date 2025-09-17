@@ -31,18 +31,23 @@ export function NetPositionsTab() {
     loadData();
   }, []);
 
-  // Filter data based on selections
-  const filteredPmixData = pmixData.filter(d => 
-    d.energySourceDescription === energySource &&
-    d.submarketDescription === submarket &&
-    d.year === parseInt(year)
-  );
+  // Filter data based on selections with support for "Todas" options
+  const filteredPmixData = pmixData.filter(d => {
+    const yearMatch = d.year === parseInt(year);
+    const energyMatch = energySource === 'Todas as Fontes' || d.energySourceDescription === energySource;
+    const submarketMatch = submarket === 'Todos os Submercados' || d.submarketDescription === submarket;
+    return yearMatch && energyMatch && submarketMatch;
+  });
 
-  const filteredNetData = netData.filter(d => 
-    d.energySourceDescription === energySource &&
-    d.submarketDescription === submarket &&
-    d.year === parseInt(year)
-  );
+  const filteredNetData = netData.filter(d => {
+    const yearMatch = d.year === parseInt(year);
+    const energyMatch = energySource === 'Todas as Fontes' || d.energySourceDescription === energySource;
+    const submarketMatch = submarket === 'Todos os Submercados' || d.submarketDescription === submarket;
+    return yearMatch && energyMatch && submarketMatch;
+  });
+
+  // Check if we should hide the average prices chart (when "Todas" options are selected)
+  const shouldHidePricesChart = energySource === 'Todas as Fontes' || submarket === 'Todos os Submercados';
 
   // Prepare volume chart data
   const volumeChartData = fillMissingMonths(
@@ -151,10 +156,11 @@ export function NetPositionsTab() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="space-y-6">
         <ChartContainer
           title="Volumes de Energia"
           description="Volume líquido mensal"
+          className="w-full"
         >
           <FinancialLineChart
             data={volumeChartData}
@@ -172,36 +178,40 @@ export function NetPositionsTab() {
           />
         </ChartContainer>
 
-        <ChartContainer
-          title="Preços Médios"
-          description="Preço médio de compra e venda mensal"
-        >
-          <FinancialLineChart
-            data={priceChartData}
-            lines={[
-              {
-                dataKey: 'buyPrice',
-                stroke: 'hsl(var(--chart-3))',
-                name: 'Preço Compra',
-                unit: 'R$/MWh',
-                format: 'currency',
-              },
-              {
-                dataKey: 'sellPrice',
-                stroke: 'hsl(var(--chart-4))',
-                name: 'Preço Venda',
-                unit: 'R$/MWh',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+        {!shouldHidePricesChart && (
+          <ChartContainer
+            title="Preços Médios"
+            description="Preço médio de compra e venda mensal"
+            className="w-full"
+          >
+            <FinancialLineChart
+              data={priceChartData}
+              lines={[
+                {
+                  dataKey: 'buyPrice',
+                  stroke: 'hsl(var(--chart-3))',
+                  name: 'Preço Compra',
+                  unit: 'R$/MWh',
+                  format: 'currency',
+                },
+                {
+                  dataKey: 'sellPrice',
+                  stroke: 'hsl(var(--chart-4))',
+                  name: 'Preço Venda',
+                  unit: 'R$/MWh',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        )}
 
         <ChartContainer
           title="Marcação a Mercado"
           description="MtM mensal da posição selecionada"
+          className="w-full"
         >
           <FinancialLineChart
             data={mtmChartData}
@@ -222,6 +232,7 @@ export function NetPositionsTab() {
         <ChartContainer
           title="Profit and Loss"
           description="P&L mensal da posição selecionada"
+          className="w-full"
         >
           <FinancialLineChart
             data={plChartData}
@@ -242,6 +253,7 @@ export function NetPositionsTab() {
         <ChartContainer
           title="Exposição (Face Value)"
           description="Exposição mensal da posição selecionada"
+          className="w-full"
         >
           <FinancialLineChart
             data={faceValueChartData}
