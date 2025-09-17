@@ -15,6 +15,7 @@ import {
 
 export function ProductPositionsTab() {
   const [year, setYear] = useState<number>(2025);
+  const [selectedProducts, setSelectedProducts] = useState<string[]>(['todos']);
   const [productData, setProductData] = useState<ProductData[]>([]);
 
   useEffect(() => {
@@ -167,8 +168,9 @@ export function ProductPositionsTab() {
   return (
     <div className="space-y-6">
       <ProductFilters 
-        onFiltersChange={({ year }) => {
+        onFiltersChange={({ year, selectedProducts }) => {
           setYear(year);
+          setSelectedProducts(selectedProducts);
         }}
         availableYears={availableYears}
       />
@@ -204,55 +206,55 @@ export function ProductPositionsTab() {
           <FinancialLineChart
             data={getVolumeData()}
             lines={[
-              {
-                dataKey: 'energia',
+              ...(selectedProducts.includes('todos') || selectedProducts.includes('energia') ? [{
+                dataKey: 'energia' as const,
                 stroke: 'hsl(var(--chart-1))',
                 name: 'Energia',
                 unit: 'MWm',
-                format: 'number',
-              },
-              {
-                dataKey: 'convencional',
+                format: 'number' as const,
+              }] : []),
+              ...(selectedProducts.includes('todos') || selectedProducts.includes('convencional') ? [{
+                dataKey: 'convencional' as const,
                 stroke: 'hsl(var(--chart-2))',
                 name: 'Convencional',
                 unit: 'MWm',
-                format: 'number',
-              },
-              {
-                dataKey: 'incentivada',
+                format: 'number' as const,
+              }] : []),
+              ...(selectedProducts.includes('todos') || selectedProducts.includes('incentivada') ? [{
+                dataKey: 'incentivada' as const,
                 stroke: 'hsl(var(--chart-3))',
                 name: 'Incentivada',
                 unit: 'MWm',
-                format: 'number',
-              },
-              {
-                dataKey: 'seSubmarket',
+                format: 'number' as const,
+              }] : []),
+              ...(selectedProducts.includes('todos') || selectedProducts.includes('seSubmarket') ? [{
+                dataKey: 'seSubmarket' as const,
                 stroke: 'hsl(var(--chart-4))',
                 name: 'Sudeste/Centro-Oeste',
                 unit: 'MWm',
-                format: 'number',
-              },
-              {
-                dataKey: 'sSubmarket',
+                format: 'number' as const,
+              }] : []),
+              ...(selectedProducts.includes('todos') || selectedProducts.includes('sSubmarket') ? [{
+                dataKey: 'sSubmarket' as const,
                 stroke: 'hsl(var(--chart-5))',
                 name: 'Sul',
                 unit: 'MWm',
-                format: 'number',
-              },
-              {
-                dataKey: 'neSubmarket',
+                format: 'number' as const,
+              }] : []),
+              ...(selectedProducts.includes('todos') || selectedProducts.includes('neSubmarket') ? [{
+                dataKey: 'neSubmarket' as const,
                 stroke: 'hsl(var(--destructive))',
                 name: 'Nordeste',
                 unit: 'MWm',
-                format: 'number',
-              },
-              {
-                dataKey: 'nSubmarket',
+                format: 'number' as const,
+              }] : []),
+              ...(selectedProducts.includes('todos') || selectedProducts.includes('nSubmarket') ? [{
+                dataKey: 'nSubmarket' as const,
                 stroke: 'hsl(var(--primary))',
                 name: 'Norte',
                 unit: 'MWm',
-                format: 'number',
-              },
+                format: 'number' as const,
+              }] : []),
             ]}
             height={400}
             yAxisFormat="number"
