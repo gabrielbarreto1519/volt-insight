@@ -90,6 +90,17 @@ export function NetPositionsTab() {
     { profitLoss: 0 }
   );
 
+  // Prepare Face Value chart data
+  const faceValueChartData = fillMissingMonths(
+    filteredNetData.map(d => ({
+      month: d.month,
+      year: d.year,
+      faceValue: d.faceValue,
+    })),
+    parseInt(year),
+    { faceValue: 0 }
+  );
+
   // Get available options from data for dynamic filters
   const availableYears = [...new Set([...pmixData.map(d => d.year.toString()), ...netData.map(d => d.year.toString())])].sort();
   const availableEnergySource = [...new Set([...pmixData.map(d => d.energySourceDescription), ...netData.map(d => d.energySourceDescription)])].filter(Boolean);
@@ -99,8 +110,7 @@ export function NetPositionsTab() {
   const totalVolume = filteredPmixData.reduce((sum, item) => sum + (item.netVolumn || 0), 0);
   const totalMtM = filteredNetData.reduce((sum, item) => sum + (item.MtM || 0), 0);
   const totalProfitLoss = filteredNetData.reduce((sum, item) => sum + (item.profitLoss || 0), 0);
-  // Note: faceValue não está disponível nos dados atuais, usando volume como proxy para exposição
-  const totalExposure = totalVolume;
+  const totalExposure = filteredNetData.reduce((sum, item) => sum + (item.faceValue || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -123,8 +133,8 @@ export function NetPositionsTab() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KpiCard
           title="Exposição Total"
-          value={formatNumber(totalExposure)}
-          subtitle="Volume Total (MWm)"
+          value={formatCurrency(totalExposure)}
+          subtitle="Face Value"
           trend="neutral"
         />
         <KpiCard
@@ -220,6 +230,26 @@ export function NetPositionsTab() {
                 dataKey: 'profitLoss',
                 stroke: 'hsl(var(--loss))',
                 name: 'P&L',
+                unit: 'R$',
+                format: 'currency',
+              },
+            ]}
+            height={300}
+            yAxisFormat="currency"
+          />
+        </ChartContainer>
+
+        <ChartContainer
+          title="Exposição (Face Value)"
+          description="Exposição mensal da posição selecionada"
+        >
+          <FinancialLineChart
+            data={faceValueChartData}
+            lines={[
+              {
+                dataKey: 'faceValue',
+                stroke: 'hsl(var(--chart-2))',
+                name: 'Face Value',
                 unit: 'R$',
                 format: 'currency',
               },
