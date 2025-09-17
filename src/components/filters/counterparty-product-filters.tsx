@@ -6,19 +6,50 @@ interface CounterpartyProductFiltersProps {
   setCounterparty: (value: string) => void;
   year: string;
   setYear: (value: string) => void;
+  selectedProducts: string[];
+  setSelectedProducts: (value: string[]) => void;
   availableCounterparties: string[];
   availableYears: string[];
 }
+
+const productOptions = [
+  { value: 'todos', label: 'Todos' },
+  { value: 'energia', label: 'Energia' },
+  { value: 'convencional', label: 'Convencional' },
+  { value: 'incentivada', label: 'Incentivada 50%' },
+  { value: 'seSubmarket', label: 'Sudeste/Centro-Oeste' },
+  { value: 'sSubmarket', label: 'Sul' },
+  { value: 'neSubmarket', label: 'Nordeste' },
+  { value: 'nSubmarket', label: 'Norte' },
+];
 
 export function CounterpartyProductFilters({
   counterparty,
   setCounterparty,
   year,
   setYear,
+  selectedProducts,
+  setSelectedProducts,
   availableCounterparties,
   availableYears,
 }: CounterpartyProductFiltersProps) {
   const yearsWithAll = ["Todos", ...availableYears];
+  
+  const handleProductChange = (value: string) => {
+    if (value === 'todos') {
+      setSelectedProducts(['todos']);
+    } else {
+      setSelectedProducts([value]);
+    }
+  };
+
+  const getProductDisplayValue = () => {
+    if (selectedProducts.includes('todos')) {
+      return 'Todos';
+    }
+    const selected = productOptions.find(option => selectedProducts.includes(option.value));
+    return selected ? selected.label : 'Selecione um produto';
+  };
   
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border">
@@ -54,9 +85,27 @@ export function CounterpartyProductFilters({
         </Select>
       </div>
 
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-muted-foreground">Produtos</label>
+        <Select value={selectedProducts[0] || 'todos'} onValueChange={handleProductChange}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Selecione os produtos">
+              {getProductDisplayValue()}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {productOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="flex items-end gap-2">
         <Badge variant="outline" className="text-primary border-primary">
-          {counterparty} | {year}
+          {counterparty} | {year} | {getProductDisplayValue()}
         </Badge>
       </div>
     </div>
