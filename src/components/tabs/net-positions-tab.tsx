@@ -122,6 +122,12 @@ export function NetPositionsTab() {
       {/* KPIs Anuais */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KpiCard
+          title="Exposição Total"
+          value={formatNumber(totalExposure)}
+          subtitle="Volume Total (MWm)"
+          trend="neutral"
+        />
+        <KpiCard
           title="MtM Total"
           value={formatCurrency(totalMtM)}
           subtitle="Marcação a Mercado"
@@ -132,12 +138,6 @@ export function NetPositionsTab() {
           value={formatCurrency(totalProfitLoss)}
           subtitle="P&L Consolidado"
           trend={totalProfitLoss >= 0 ? "up" : "down"}
-        />
-        <KpiCard
-          title="Volume Total"
-          value={formatNumber(totalVolume)}
-          subtitle="Volume Líquido (MWm)"
-          trend="neutral"
         />
       </div>
 
