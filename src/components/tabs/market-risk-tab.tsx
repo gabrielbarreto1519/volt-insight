@@ -103,10 +103,11 @@ export function MarketRiskTab() {
       month: d.month,
       year: d.year,
       profitLoss: isVaR ? d.profitLossTotal_VaR : d.profitLossTotal_CVaR,
+      profitLossNormal: d.profitLoss,
       riskMeasure: isVaR ? d.VaR_total : d.CVaR_total,
     })),
     parseInt(year),
-    { profitLoss: 0, riskMeasure: 0 }
+    { profitLoss: 0, profitLossNormal: 0, riskMeasure: 0 }
   );
 
   // Prepare volume chart data based on product selection
@@ -262,11 +263,17 @@ export function MarketRiskTab() {
 
         <ChartContainer
           title="P&L Estressado + Medida de Risco"
-          description={`P&L e ${isVaR ? 'VaR95' : 'CVaR95'} mensal`}
+          description={`P&L normal, estressado e ${isVaR ? 'VaR95' : 'CVaR95'} mensal`}
         >
           <FinancialLineChart
             data={plRiskChartData}
             lines={[
+              {
+                dataKey: 'profitLossNormal',
+                stroke: 'hsl(var(--chart-1))',
+                name: 'P&L Normal',
+                format: 'currency',
+              },
               {
                 dataKey: 'profitLoss',
                 stroke: 'hsl(var(--profit))',

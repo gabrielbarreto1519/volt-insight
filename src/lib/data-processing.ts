@@ -38,6 +38,7 @@ export interface RiskData {
   CVaR_source: number;
   VaR_submarket: number;
   CVaR_submarket: number;
+  profitLoss: number;
   profitLossTotal_VaR: number;
   profitLossTotal_CVaR: number;
   percentageVaRenergy: number;
@@ -129,6 +130,7 @@ export function processRiskData(data: any[]): RiskData[] {
     CVaR_source: parseFloat(row.CVaR_source) || 0,
     VaR_submarket: parseFloat(row.VaR_submarket) || 0,
     CVaR_submarket: parseFloat(row.CVaR_submarket) || 0,
+    profitLoss: parseFloat(row.profitLoss) || 0,
     profitLossTotal_VaR: parseFloat(row.profitLossTotal_VaR) || 0,
     profitLossTotal_CVaR: parseFloat(row.profitLossTotal_CVaR) || 0,
     percentageVaRenergy: parseFloat(row.percentageVaRenergy) || 0,
