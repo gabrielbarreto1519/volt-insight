@@ -48,16 +48,16 @@ export function MarketRiskTab() {
   const getAnnualKPIs = () => {
     if (!currentYearData) return null;
     
-    const varTotal = isVaR ? currentYearData.VaR_total : currentYearData.CVaR_total;
-    const plTotal = isVaR ? currentYearData.profitLossTotal_VaR : currentYearData.profitLossTotal_CVaR;
+    const varTotal = isVaR ? currentYearData[' VaR_total '] : currentYearData[' CVaR_total '];
+    const plTotal = isVaR ? currentYearData[' profitLossTotal_VaR '] : currentYearData[' profitLossTotal_CVaR '];
     const energyPercentage = isVaR ? currentYearData.percentageVaRenergy : currentYearData.percentageCVaRenergy;
     const submarketPercentage = isVaR ? currentYearData.percentageVaRsubmarket : currentYearData.percentageCVaRsubmarket;
     const sourcePercentage = isVaR ? currentYearData.percentageVaRsource : currentYearData.percentageCVaRsource;
     
     return {
       varTotal,
-      mtmTotal: currentYearData.mtm || 0, // MtM Total usando coluna mtm da planilha downside risk - year
-      exposicaoTotal: currentYearData.faceValue || 0, // Exposição Total usando faceValue da planilha downside risk - year
+      mtmTotal: currentYearData[' mtm '] || 0, // MtM Total usando coluna mtm da planilha downside risk - year
+      exposicaoTotal: currentYearData[' faceValue '] || 0, // Exposição Total usando faceValue da planilha downside risk - year
       plTotal,
       energyPercentage,
       submarketPercentage,
