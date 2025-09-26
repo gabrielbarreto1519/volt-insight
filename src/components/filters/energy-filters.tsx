@@ -37,10 +37,10 @@ export function EnergyFilters({
           <div>
             <label className="text-sm font-medium mb-2 block">Fonte de Energia</label>
             <Select value={energySource} onValueChange={setEnergySource} disabled={isFinancialMode}>
-              <SelectTrigger className="bg-background border-border z-50">
+              <SelectTrigger className="bg-background border-border">
                 <SelectValue placeholder="Selecione a fonte" />
               </SelectTrigger>
-              <SelectContent className="bg-background border-border shadow-lg z-50">
+              <SelectContent className="bg-background border-border shadow-lg">
                 {availableEnergySource.map((source) => (
                   <SelectItem key={source} value={source}>
                     {source}
@@ -53,10 +53,10 @@ export function EnergyFilters({
           <div>
             <label className="text-sm font-medium mb-2 block">Submercado</label>
             <Select value={submarket} onValueChange={setSubmarket} disabled={isFinancialMode}>
-              <SelectTrigger className="bg-background border-border z-50">
+              <SelectTrigger className="bg-background border-border">
                 <SelectValue placeholder="Selecione o submercado" />
               </SelectTrigger>
-              <SelectContent className="bg-background border-border shadow-lg z-50">
+              <SelectContent className="bg-background border-border shadow-lg">
                 {availableSubmarkets.map((sub) => (
                   <SelectItem key={sub} value={sub}>
                     {sub}
@@ -69,10 +69,10 @@ export function EnergyFilters({
           <div>
             <label className="text-sm font-medium mb-2 block">Ano</label>
             <Select value={year} onValueChange={setYear}>
-              <SelectTrigger className="bg-background border-border z-50">
+              <SelectTrigger className="bg-background border-border">
                 <SelectValue placeholder="Selecione o ano" />
               </SelectTrigger>
-              <SelectContent className="bg-background border-border shadow-lg z-50">
+              <SelectContent className="bg-background border-border shadow-lg">
                 {availableYears.map((y) => (
                   <SelectItem key={y} value={y}>
                     {y}

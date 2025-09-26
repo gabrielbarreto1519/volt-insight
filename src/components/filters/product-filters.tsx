@@ -80,7 +80,7 @@ export function ProductFilters({ onFiltersChange, availableYears }: ProductFilte
                   {getDisplayValue()}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-background border-border z-50">
+              <SelectContent className="bg-background border-border">
                 {productOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
