@@ -51,8 +51,8 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
   };
 
   return (
-    <Card className={cn("kpi-card smooth-transition hover:shadow-lg", className)}>
-      <CardHeader className="pb-2">
+    <Card className={cn("kpi-card smooth-transition hover:shadow-lg flex flex-col", className)}>
+      <CardHeader className="pb-2 flex-shrink-0">
         <CardTitle className={cn(
           "text-sm font-medium leading-tight", 
           "whitespace-nowrap overflow-hidden text-ellipsis",
@@ -61,19 +61,20 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="h-8 flex items-center">
+      <CardContent className="pt-0 pb-3 flex-grow flex items-start">
+        <div className="w-full overflow-visible">
           <Textfit 
             mode="single" 
             min={12} 
             max={40}
             style={{
               width: '100%',
-              height: '100%',
               fontWeight: 'bold',
               color: 'hsl(var(--foreground))',
               whiteSpace: 'nowrap',
-              overflow: 'hidden'
+              overflow: 'visible',
+              lineHeight: '1',
+              display: 'block'
             }}
           >
             {value}
