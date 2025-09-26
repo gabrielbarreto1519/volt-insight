@@ -232,13 +232,13 @@ export function MarketRiskTab() {
             isNegative={annualKPIs.varTotal < 0}
           />
           <KpiCard
-            title="MtM Total"
+            title="Mark-to-Market"
             value={formatCurrency(annualKPIs.mtmTotal)}
             trend={annualKPIs.mtmTotal >= 0 ? "up" : "down"}
             isNegative={annualKPIs.mtmTotal < 0}
           />
           <KpiCard
-            title="Exposição Total"
+            title="Face Value"
             value={formatCurrency(annualKPIs.exposicaoTotal)}
             trend={annualKPIs.exposicaoTotal >= 0 ? "up" : "down"}
             isNegative={annualKPIs.exposicaoTotal < 0}
