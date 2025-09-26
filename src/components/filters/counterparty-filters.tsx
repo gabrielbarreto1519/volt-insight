@@ -36,7 +36,10 @@ export function CounterpartyFilters({
           <SelectTrigger className="w-[250px]">
             <SelectValue placeholder="Selecione a contraparte" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent 
+            sideOffset={4}
+            className="max-h-[300px] overflow-y-auto z-[1000]"
+          >
             {availableCounterparties.map((cp) => (
               <SelectItem key={cp} value={cp}>
                 {cp}
@@ -52,7 +55,10 @@ export function CounterpartyFilters({
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent 
+            sideOffset={4}
+            className="max-h-[300px] overflow-y-auto z-[1000]"
+          >
             {years.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}

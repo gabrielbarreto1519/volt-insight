@@ -22,10 +22,29 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
     }
   };
 
+  // Determine title color based on value (positive/negative)
+  const getTitleColor = () => {
+    // Convert value to number for comparison if it's a string
+    const numericValue = typeof value === 'string' ? 
+      parseFloat(value.replace(/[^\d.-]/g, '')) : value;
+    
+    if (isNegative !== undefined) {
+      return isNegative ? "text-destructive" : "text-success";
+    }
+    
+    if (numericValue < 0) {
+      return "text-destructive";
+    } else if (numericValue > 0) {
+      return "text-success";
+    }
+    
+    return "text-muted-foreground";
+  };
+
   return (
     <Card className={cn("kpi-card smooth-transition hover:shadow-lg", className)}>
       <CardHeader className="pb-2">
-        <CardTitle className={cn("text-sm font-medium", isNegative ? "text-destructive" : "text-muted-foreground")}>
+        <CardTitle className={cn("text-sm font-medium", getTitleColor())}>
           {title}
         </CardTitle>
       </CardHeader>

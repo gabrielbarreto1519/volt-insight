@@ -38,7 +38,10 @@ export function RiskFilters({
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent 
+            sideOffset={4}
+            className="max-h-[300px] overflow-y-auto z-[1000]"
+          >
             {years.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
@@ -54,7 +57,10 @@ export function RiskFilters({
           <SelectTrigger className="w-[150px]">
             <SelectValue placeholder="Selecione o produto" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent 
+            sideOffset={4}
+            className="max-h-[300px] overflow-y-auto z-[1000]"
+          >
             {produtos.map((prod) => (
               <SelectItem key={prod} value={prod}>
                 {prod}

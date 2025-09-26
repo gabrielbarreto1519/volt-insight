@@ -51,8 +51,8 @@ export function CounterpartyProductPositionsTab() {
     return matchesCounterparty && matchesYear;
   });
 
-  // Get available options from data for dynamic filters
-  const availableYears = [...new Set(counterpartyProductData.map(d => d.year.toString()))].sort();
+  // Get available options from data for dynamic filters (including "Todos" option)
+  const availableYears = ['Todos', ...[...new Set(counterpartyProductData.map(d => d.year.toString()))].sort()];
 
   // Calculate KPIs
   const calculateKPIs = () => {
@@ -243,11 +243,13 @@ export function CounterpartyProductPositionsTab() {
             title="MtM Total"
             value={formatCurrency(kpis.totalMtM)}
             trend={kpis.totalMtM >= 0 ? "up" : "down"}
+            isNegative={kpis.totalMtM < 0}
           />
           <KpiCard
             title="P&L Total"
             value={formatCurrency(kpis.totalPL)}
             trend={kpis.totalPL >= 0 ? "up" : "down"}
+            isNegative={kpis.totalPL < 0}
           />
         </div>
       )}

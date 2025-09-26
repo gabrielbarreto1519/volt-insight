@@ -37,14 +37,14 @@ export function CreditRiskTab() {
 
   // Filter data based on selections
   const filteredData = counterpartyData.filter(d => {
-    // When "Todos" is selected for year, show all counterparties consolidated
-    const matchesCounterparty = year === 'Todos' ? true : d.counterparty === counterparty;
+    // Always filter by counterparty when it's selected
+    const matchesCounterparty = d.counterparty === counterparty;
     const matchesYear = year === 'Todos' || d.year === parseInt(year);
     return matchesCounterparty && matchesYear;
   });
 
-  // Get available options from data for dynamic filters
-  const availableYears = [...new Set(counterpartyData.map(d => d.year.toString()))].sort();
+  // Get available options from data for dynamic filters (including "Todos" option)
+  const availableYears = ['Todos', ...[...new Set(counterpartyData.map(d => d.year.toString()))].sort()];
 
   // Calculate annual KPIs for selected counterparty and year
   const getAnnualKPIs = () => {

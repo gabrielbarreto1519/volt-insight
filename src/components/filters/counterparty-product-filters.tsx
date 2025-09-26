@@ -59,7 +59,10 @@ export function CounterpartyProductFilters({
           <SelectTrigger className="w-[250px]">
             <SelectValue placeholder="Selecione a contraparte" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent 
+            sideOffset={4}
+            className="max-h-[300px] overflow-y-auto z-[1000]"
+          >
             {availableCounterparties.map((cp) => (
               <SelectItem key={cp} value={cp}>
                 {cp}
@@ -75,7 +78,10 @@ export function CounterpartyProductFilters({
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent 
+            sideOffset={4}
+            className="max-h-[300px] overflow-y-auto z-[1000]"
+          >
             {yearsWithAll.map((yr) => (
               <SelectItem key={yr} value={yr}>
                 {yr}
@@ -93,7 +99,10 @@ export function CounterpartyProductFilters({
               {getProductDisplayValue()}
             </SelectValue>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent 
+            sideOffset={4}
+            className="max-h-[300px] overflow-y-auto z-[1000]"
+          >
             {productOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}

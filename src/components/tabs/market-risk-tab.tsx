@@ -229,11 +229,13 @@ export function MarketRiskTab() {
             title={`${isVaR ? 'VaR' : 'CVaR'} Total ${year === 'Todos' ? 'Acumulado' : 'Anual'}`}
             value={formatCurrency(annualKPIs.varTotal)}
             trend={annualKPIs.varTotal >= 0 ? "up" : "down"}
+            isNegative={annualKPIs.varTotal < 0}
           />
           <KpiCard
             title="MtM Total"
             value={formatCurrency(annualKPIs.mtmTotal)}
             trend={annualKPIs.mtmTotal >= 0 ? "up" : "down"}
+            isNegative={annualKPIs.mtmTotal < 0}
           />
           <KpiCard
             title="Exposição Total"
@@ -245,6 +247,7 @@ export function MarketRiskTab() {
             title="P&L Estressado"
             value={formatCurrency(annualKPIs.plTotal)}
             trend={annualKPIs.plTotal >= 0 ? "up" : "down"}
+            isNegative={annualKPIs.plTotal < 0}
           />
           <KpiCard
             title="Distribuição de Risco"

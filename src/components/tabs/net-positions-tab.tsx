@@ -263,12 +263,14 @@ export function NetPositionsTab() {
           value={formatCurrency(kpis.totalMtM)}
           subtitle="Marcação a Mercado"
           trend={kpis.totalMtM >= 0 ? "up" : "down"}
+          isNegative={kpis.totalMtM < 0}
         />
         <KpiCard
           title="Resultado Total"
           value={formatCurrency(kpis.totalProfitLoss)}
           subtitle="P&L Consolidado"
           trend={kpis.totalProfitLoss >= 0 ? "up" : "down"}
+          isNegative={kpis.totalProfitLoss < 0}
         />
       </div>
 
