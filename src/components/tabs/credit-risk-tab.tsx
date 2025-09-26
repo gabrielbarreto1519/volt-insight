@@ -37,7 +37,8 @@ export function CreditRiskTab() {
 
   // Filter data based on selections
   const filteredData = counterpartyData.filter(d => {
-    const matchesCounterparty = d.counterparty === counterparty;
+    // When "Todos" is selected for year, show all counterparties consolidated
+    const matchesCounterparty = year === 'Todos' ? true : d.counterparty === counterparty;
     const matchesYear = year === 'Todos' || d.year === parseInt(year);
     return matchesCounterparty && matchesYear;
   });
@@ -47,7 +48,7 @@ export function CreditRiskTab() {
 
   // Calculate annual KPIs for selected counterparty and year
   const getAnnualKPIs = () => {
-    if (!counterparty || filteredData.length === 0) return null;
+    if ((year !== 'Todos' && !counterparty) || filteredData.length === 0) return null;
     
     const totalFaceValue = aggregateByYear(filteredData, 'faceValue');
     const totalMtM = aggregateByYear(filteredData, 'MtM');
@@ -120,23 +121,26 @@ export function CreditRiskTab() {
       </div>
 
       {/* KPI Cards */}
-      {annualKPIs && counterparty && (
+      {annualKPIs && (counterparty || year === 'Todos') && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <KpiCard
             title="Exposição Acumulada"
             value={formatCurrency(annualKPIs.totalFaceValue)}
             subtitle="Face Value Total"
             trend={annualKPIs.totalFaceValue >= 0 ? "up" : "down"}
-          />
+            isNegative={annualKPIs.totalFaceValue < 0}
+            />
           <KpiCard
             title="MtM Acumulado"
             value={formatCurrency(annualKPIs.totalMtM)}
             trend={annualKPIs.totalMtM >= 0 ? "up" : "down"}
+            isNegative={annualKPIs.totalMtM < 0}
           />
           <KpiCard
             title="P&L Acumulado"
             value={formatCurrency(annualKPIs.totalPL)}
             trend={annualKPIs.totalPL >= 0 ? "up" : "down"}
+            isNegative={annualKPIs.totalPL < 0}
           />
         </div>
       )}
