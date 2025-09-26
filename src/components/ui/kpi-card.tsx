@@ -52,15 +52,22 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
   return (
     <Card className={cn("kpi-card smooth-transition hover:shadow-lg", className)}>
       <CardHeader className="pb-2">
-        <CardTitle className={cn("text-sm font-medium", getTitleColor())}>
+        <CardTitle className={cn(
+          "text-sm font-medium leading-tight", 
+          "whitespace-nowrap overflow-hidden text-ellipsis",
+          getTitleColor()
+        )}>
           {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="text-2xl font-bold text-foreground">{value}</div>
-        {subtitle && (
-          <p className={cn("text-sm mt-1", getSubtitleColor())}>{subtitle}</p>
-        )}
+        <div className={cn(
+          "text-lg sm:text-xl md:text-2xl font-bold text-foreground",
+          "whitespace-nowrap overflow-hidden text-ellipsis",
+          "leading-tight"
+        )}>
+          {value}
+        </div>
       </CardContent>
     </Card>
   );
