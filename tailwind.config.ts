@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'hanken': ['Hanken Grotesk', 'sans-serif'],
+        'zilla': ['Zilla Slab', 'serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
