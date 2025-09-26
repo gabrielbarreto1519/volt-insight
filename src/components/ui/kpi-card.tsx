@@ -22,6 +22,14 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
     }
   };
 
+  // Determine subtitle color - use value-based color for "Face Value" subtitles
+  const getSubtitleColor = () => {
+    if (subtitle === "Face Value") {
+      return getTitleColor(); // Use same color logic as title for Face Value
+    }
+    return getTrendColor(); // Use trend color for other subtitles
+  };
+
   // Determine title color based on value (positive/negative)
   const getTitleColor = () => {
     // Convert value to number for comparison if it's a string
@@ -51,7 +59,7 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
       <CardContent className="pt-0">
         <div className="text-2xl font-bold text-foreground">{value}</div>
         {subtitle && (
-          <p className={cn("text-sm mt-1", getTrendColor())}>{subtitle}</p>
+          <p className={cn("text-sm mt-1", getSubtitleColor())}>{subtitle}</p>
         )}
       </CardContent>
     </Card>
