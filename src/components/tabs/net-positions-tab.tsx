@@ -194,7 +194,8 @@ export function NetPositionsTab() {
   );
 
   // Get available options from data for dynamic filters (including "Todos" option)
-  const availableYears = ['Todos', ...[...new Set([...pmixData.map(d => d.year.toString()), ...netData.map(d => d.year.toString())])].sort()];
+  const uniqueYears = [...new Set([...pmixData.map(d => d.year.toString()), ...netData.map(d => d.year.toString())])].sort();
+  const availableYears = ['Todos', ...uniqueYears.filter(year => year !== 'Todos')];
   const availableEnergySource = [...new Set([...pmixData.map(d => d.energySourceDescription), ...netData.map(d => d.energySourceDescription)])].filter(Boolean);
   const availableSubmarkets = [...new Set([...pmixData.map(d => d.submarketDescription), ...netData.map(d => d.submarketDescription)])].filter(Boolean);
 

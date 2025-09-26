@@ -52,7 +52,8 @@ export function CounterpartyProductPositionsTab() {
   });
 
   // Get available options from data for dynamic filters (including "Todos" option)
-  const availableYears = ['Todos', ...[...new Set(counterpartyProductData.map(d => d.year.toString()))].sort()];
+  const uniqueYears = [...new Set(counterpartyProductData.map(d => d.year.toString()))].sort();
+  const availableYears = ['Todos', ...uniqueYears.filter(year => year !== 'Todos')];
 
   // Calculate KPIs
   const calculateKPIs = () => {

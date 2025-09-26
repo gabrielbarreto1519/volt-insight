@@ -33,7 +33,9 @@ export function CounterpartyProductFilters({
   availableCounterparties,
   availableYears,
 }: CounterpartyProductFiltersProps) {
-  const yearsWithAll = ["Todos", ...availableYears];
+  // Remove duplicates and ensure "Todos" is first
+  const filteredYears = availableYears.filter(year => year !== 'Todos');
+  const yearsWithAll = ["Todos", ...filteredYears];
   
   const handleProductChange = (value: string) => {
     if (value === 'todos') {
