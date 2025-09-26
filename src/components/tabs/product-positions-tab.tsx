@@ -229,6 +229,7 @@ export function ProductPositionsTab() {
           title="Exposição Total"
           value={formatCurrency(totalExposure)}
           subtitle="Face Value"
+          trend={totalExposure >= 0 ? "up" : "down"}
         />
         <KpiCard
           title="MtM Total"

@@ -37,8 +37,12 @@ export function MarketRiskTab() {
   }, []);
 
   // Filter data based on selections
-  const filteredMonthlyData = monthlyRiskData.filter(d => d.year === parseInt(year));
-  const currentYearData = yearlyRiskData.find(d => d.year === parseInt(year));
+  const filteredMonthlyData = year === 'Todos' 
+    ? monthlyRiskData 
+    : monthlyRiskData.filter(d => d.year === parseInt(year));
+  const currentYearData = year === 'Todos' 
+    ? null 
+    : yearlyRiskData.find(d => d.year === parseInt(year));
 
   // Get available options from data for dynamic filters
   const availableYears = [...new Set([...monthlyRiskData.map(d => d.year.toString()), ...yearlyRiskData.map(d => d.year?.toString())])].filter(Boolean).sort();
@@ -46,6 +50,31 @@ export function MarketRiskTab() {
 
   // Get annual KPIs
   const getAnnualKPIs = () => {
+    if (year === 'Todos') {
+      // Calculate accumulated KPIs from yearly data
+      const totalVaR = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_total '] || 0) : (d[' CVaR_total '] || 0)), 0);
+      const totalMtM = yearlyRiskData.reduce((sum, d) => sum + (d[' mtm '] || 0), 0);
+      const totalExposure = yearlyRiskData.reduce((sum, d) => sum + (d[' faceValue '] || 0), 0);
+      const totalPL = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' profitLossTotal_VaR '] || 0) : (d[' profitLossTotal_CVaR '] || 0)), 0);
+      
+      // Calculate weighted percentages based on total risk
+      const totalEnergyRisk = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_energy '] || 0) : (d[' CVaR_energy '] || 0)), 0);
+      const totalSourceRisk = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_source '] || 0) : (d[' CVaR_source '] || 0)), 0);
+      const totalSubmarketRisk = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_submarket '] || 0) : (d[' CVaR_submarket '] || 0)), 0);
+      
+      const totalRisk = Math.abs(totalEnergyRisk) + Math.abs(totalSourceRisk) + Math.abs(totalSubmarketRisk);
+      
+      return {
+        varTotal: totalVaR,
+        mtmTotal: totalMtM,
+        exposicaoTotal: totalExposure,
+        plTotal: totalPL,
+        energyPercentage: totalRisk > 0 ? Math.abs(totalEnergyRisk) / totalRisk : 0,
+        submarketPercentage: totalRisk > 0 ? Math.abs(totalSubmarketRisk) / totalRisk : 0,
+        sourcePercentage: totalRisk > 0 ? Math.abs(totalSourceRisk) / totalRisk : 0,
+      };
+    }
+    
     if (!currentYearData) return null;
     
     const varTotal = isVaR ? currentYearData[' VaR_total '] : currentYearData[' CVaR_total '];
@@ -179,19 +208,19 @@ export function MarketRiskTab() {
       {annualKPIs && (
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <KpiCard
-            title={`${isVaR ? 'VaR' : 'CVaR'} Total Anual`}
+            title={`${isVaR ? 'VaR' : 'CVaR'} Total ${year === 'Todos' ? 'Acumulado' : 'Anual'}`}
             value={formatCurrency(annualKPIs.varTotal)}
-            trend="neutral"
+            trend={annualKPIs.varTotal >= 0 ? "up" : "down"}
           />
           <KpiCard
             title="MtM Total"
             value={formatCurrency(annualKPIs.mtmTotal)}
-            trend="neutral"
+            trend={annualKPIs.mtmTotal >= 0 ? "up" : "down"}
           />
           <KpiCard
             title="Exposição Total"
             value={formatCurrency(annualKPIs.exposicaoTotal)}
-            trend="neutral"
+            trend={annualKPIs.exposicaoTotal >= 0 ? "up" : "down"}
           />
           <KpiCard
             title="P&L Estressado"
@@ -207,8 +236,9 @@ export function MarketRiskTab() {
         </div>
       )}
 
-      {/* Gráficos Mensais */}
-      <div className="grid grid-cols-1 gap-6">
+      {/* Gráficos Mensais - Ocultos quando "Todos" selecionado */}
+      {year !== 'Todos' && (
+        <div className="grid grid-cols-1 gap-6">
         <ChartContainer
           title={`Exposição/Risco por Produto - ${produto}`}
           description={`${isVaR ? 'VaR95' : 'CVaR95'} mensal com linha total`}
@@ -391,7 +421,8 @@ export function MarketRiskTab() {
             />
           </ChartContainer>
         )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

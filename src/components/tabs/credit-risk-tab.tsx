@@ -124,9 +124,9 @@ export function CreditRiskTab() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <KpiCard
             title="Exposição Acumulada"
-            value={formatCurrency(Math.abs(annualKPIs.totalFaceValue))}
+            value={formatCurrency(annualKPIs.totalFaceValue)}
             subtitle="Face Value Total"
-            trend="neutral"
+            trend={annualKPIs.totalFaceValue >= 0 ? "up" : "down"}
           />
           <KpiCard
             title="MtM Acumulado"

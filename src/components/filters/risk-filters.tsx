@@ -14,7 +14,7 @@ interface RiskFiltersProps {
   availableProdutos?: string[];
 }
 
-const YEARS = ["2025", "2026", "2027"];
+const YEARS = ["Todos", "2025", "2026", "2027"];
 const PRODUTOS = ["Energia", "Fonte", "Submercado"];
 
 export function RiskFilters({

@@ -234,9 +234,9 @@ export function CounterpartyProductPositionsTab() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <KpiCard
             title="Exposição Total"
-            value={formatCurrency(Math.abs(kpis.totalFaceValue))}
+            value={formatCurrency(kpis.totalFaceValue)}
             subtitle="Face Value"
-            trend="neutral"
+            trend={kpis.totalFaceValue >= 0 ? "up" : "down"}
           />
           <KpiCard
             title="MtM Total"
