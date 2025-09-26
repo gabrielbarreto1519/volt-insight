@@ -3,7 +3,7 @@ import { EnergyFilters } from '@/components/filters/energy-filters';
 import { ChartContainer } from '@/components/ui/chart-container';
 import { KpiCard } from '@/components/ui/kpi-card';
 import { FinancialLineChart } from '@/components/charts/financial-line-chart';
-import { loadExcelFile, processPmixData, processNetData, fillMissingMonths, formatCurrency, formatNumber, PmixData, NetPosition } from '@/lib/data-processing';
+import { loadExcelFile, processPmixData, processNetData, fillMissingMonths, formatCurrency, formatNumber, aggregateByYear, PmixData, NetPosition } from '@/lib/data-processing';
 
 export function NetPositionsTab() {
   const [energySource, setEnergySource] = useState('Convencional');
@@ -198,11 +198,38 @@ export function NetPositionsTab() {
   const availableEnergySource = [...new Set([...pmixData.map(d => d.energySourceDescription), ...netData.map(d => d.energySourceDescription)])].filter(Boolean);
   const availableSubmarkets = [...new Set([...pmixData.map(d => d.submarketDescription), ...netData.map(d => d.submarketDescription)])].filter(Boolean);
 
-  // Calculate annual KPIs
-  const totalVolume = filteredPmixData.reduce((sum, item) => sum + (item.netVolumn || 0), 0);
-  const totalMtM = filteredNetData.reduce((sum, item) => sum + (item.MtM || 0), 0);
-  const totalProfitLoss = filteredNetData.reduce((sum, item) => sum + (item.profitLoss || 0), 0);
-  const totalExposure = filteredNetData.reduce((sum, item) => sum + (item.faceValue || 0), 0);
+  // Calculate annual KPIs - use aggregateByYear function when "Todos" is selected
+  const calculateKPIs = () => {
+    if (year === 'Todos') {
+      // Aggregate across all time periods for the selected filters
+      const totalVolume = aggregateByYear(filteredPmixData, 'netVolumn');
+      const totalMtM = aggregateByYear(filteredNetData, 'MtM');
+      const totalProfitLoss = aggregateByYear(filteredNetData, 'profitLoss');
+      const totalExposure = aggregateByYear(filteredNetData, 'faceValue');
+      
+      return {
+        totalVolume,
+        totalMtM,
+        totalProfitLoss,
+        totalExposure,
+      };
+    } else {
+      // For specific year, sum all months
+      const totalVolume = filteredPmixData.reduce((sum, item) => sum + (item.netVolumn || 0), 0);
+      const totalMtM = filteredNetData.reduce((sum, item) => sum + (item.MtM || 0), 0);
+      const totalProfitLoss = filteredNetData.reduce((sum, item) => sum + (item.profitLoss || 0), 0);
+      const totalExposure = filteredNetData.reduce((sum, item) => sum + (item.faceValue || 0), 0);
+      
+      return {
+        totalVolume,
+        totalMtM,
+        totalProfitLoss,
+        totalExposure,
+      };
+    }
+  };
+
+  const kpis = calculateKPIs();
 
   return (
     <div className="space-y-6">
@@ -226,22 +253,22 @@ export function NetPositionsTab() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KpiCard
           title="Exposição Total"
-          value={formatCurrency(totalExposure)}
+          value={formatCurrency(kpis.totalExposure)}
           subtitle="Face Value"
           trend="neutral"
-          isNegative={totalExposure < 0}
+          isNegative={kpis.totalExposure < 0}
         />
         <KpiCard
           title="MtM Total"
-          value={formatCurrency(totalMtM)}
+          value={formatCurrency(kpis.totalMtM)}
           subtitle="Marcação a Mercado"
-          trend={totalMtM >= 0 ? "up" : "down"}
+          trend={kpis.totalMtM >= 0 ? "up" : "down"}
         />
         <KpiCard
           title="Resultado Total"
-          value={formatCurrency(totalProfitLoss)}
+          value={formatCurrency(kpis.totalProfitLoss)}
           subtitle="P&L Consolidado"
-          trend={totalProfitLoss >= 0 ? "up" : "down"}
+          trend={kpis.totalProfitLoss >= 0 ? "up" : "down"}
         />
       </div>
 
