@@ -61,6 +61,9 @@ export function NetPositionsTab() {
 
   // Check if we should hide physical charts (volume and prices) in financial mode
   const shouldHidePhysicalCharts = isFinancialMode;
+  
+  // Check if we should hide all charts when "Todos" year is selected
+  const shouldHideAllCharts = year === 'Todos';
 
   // Prepare volume chart data
   const volumeChartData = fillMissingMonths(
@@ -243,7 +246,7 @@ export function NetPositionsTab() {
       </div>
 
       <div className="space-y-6">
-        {!shouldHidePhysicalCharts && (
+        {!shouldHidePhysicalCharts && !shouldHideAllCharts && (
           <ChartContainer
             title="Volumes de Energia"
             description="Volume líquido mensal"
@@ -266,7 +269,7 @@ export function NetPositionsTab() {
           </ChartContainer>
         )}
 
-        {!shouldHidePhysicalCharts && (
+        {!shouldHidePhysicalCharts && !shouldHideAllCharts && (
           <ChartContainer
             title="Preços Médios"
             description="Preço médio de compra e venda mensal"
@@ -296,68 +299,74 @@ export function NetPositionsTab() {
           </ChartContainer>
         )}
 
-        <ChartContainer
-          title="Exposição (Face Value)"
-          description="Exposição mensal da posição selecionada"
-          className="w-full"
-        >
-          <FinancialLineChart
-            data={faceValueChartData}
-            lines={[
-              {
-                dataKey: 'faceValue',
-                stroke: 'hsl(var(--chart-2))',
-                name: 'Face Value',
-                unit: 'R$',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+        {!shouldHideAllCharts && (
+          <ChartContainer
+            title="Exposição (Face Value)"
+            description="Exposição mensal da posição selecionada"
+            className="w-full"
+          >
+            <FinancialLineChart
+              data={faceValueChartData}
+              lines={[
+                {
+                  dataKey: 'faceValue',
+                  stroke: 'hsl(var(--chart-2))',
+                  name: 'Face Value',
+                  unit: 'R$',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        )}
 
-        <ChartContainer
-          title="Marcação a Mercado"
-          description="MtM mensal da posição selecionada"
-          className="w-full"
-        >
-          <FinancialLineChart
-            data={mtmChartData}
-            lines={[
-              {
-                dataKey: 'mtm',
-                stroke: 'hsl(var(--profit))',
-                name: 'MtM',
-                unit: 'R$',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+        {!shouldHideAllCharts && (
+          <ChartContainer
+            title="Marcação a Mercado"
+            description="MtM mensal da posição selecionada"
+            className="w-full"
+          >
+            <FinancialLineChart
+              data={mtmChartData}
+              lines={[
+                {
+                  dataKey: 'mtm',
+                  stroke: 'hsl(var(--profit))',
+                  name: 'MtM',
+                  unit: 'R$',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        )}
 
-        <ChartContainer
-          title="Profit and Loss"
-          description="P&L mensal da posição selecionada"
-          className="w-full"
-        >
-          <FinancialLineChart
-            data={plChartData}
-            lines={[
-              {
-                dataKey: 'profitLoss',
-                stroke: 'hsl(var(--loss))',
-                name: 'P&L',
-                unit: 'R$',
-                format: 'currency',
-              },
-            ]}
-            height={300}
-            yAxisFormat="currency"
-          />
-        </ChartContainer>
+        {!shouldHideAllCharts && (
+          <ChartContainer
+            title="Profit and Loss"
+            description="P&L mensal da posição selecionada"
+            className="w-full"
+          >
+            <FinancialLineChart
+              data={plChartData}
+              lines={[
+                {
+                  dataKey: 'profitLoss',
+                  stroke: 'hsl(var(--loss))',
+                  name: 'P&L',
+                  unit: 'R$',
+                  format: 'currency',
+                },
+              ]}
+              height={300}
+              yAxisFormat="currency"
+            />
+          </ChartContainer>
+        )}
       </div>
     </div>
   );
