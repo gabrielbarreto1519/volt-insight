@@ -253,23 +253,20 @@ export function NetPositionsTab() {
       {/* KPIs Anuais */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KpiCard
-          title="Face Value"
+          title="Exposição Total"
           value={formatCurrency(kpis.totalExposure)}
-          subtitle="Face Value"
           trend="neutral"
           isNegative={kpis.totalExposure < 0}
         />
         <KpiCard
-          title="Mark-to-Market"
+          title="MtM Total"
           value={formatCurrency(kpis.totalMtM)}
-          subtitle="Mark-to-Market"
           trend={kpis.totalMtM >= 0 ? "up" : "down"}
           isNegative={kpis.totalMtM < 0}
         />
         <KpiCard
-          title="Profit and Loss"
+          title="P&L Total"
           value={formatCurrency(kpis.totalProfitLoss)}
-          subtitle="Profit and Loss"
           trend={kpis.totalProfitLoss >= 0 ? "up" : "down"}
           isNegative={kpis.totalProfitLoss < 0}
         />

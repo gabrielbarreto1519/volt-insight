@@ -234,20 +234,19 @@ export function CounterpartyProductPositionsTab() {
       {kpis && counterparty && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <KpiCard
-            title="Face Value"
+            title="Exposição Total"
             value={formatCurrency(kpis.totalFaceValue)}
-            subtitle="Face Value"
             trend={kpis.totalFaceValue >= 0 ? "up" : "down"}
             isNegative={kpis.totalFaceValue < 0}
           />
           <KpiCard
-            title="Mark-to-Market"
+            title="MtM Total"
             value={formatCurrency(kpis.totalMtM)}
             trend={kpis.totalMtM >= 0 ? "up" : "down"}
             isNegative={kpis.totalMtM < 0}
           />
           <KpiCard
-            title="Profit and Loss"
+            title="P&L Total"
             value={formatCurrency(kpis.totalPL)}
             trend={kpis.totalPL >= 0 ? "up" : "down"}
             isNegative={kpis.totalPL < 0}

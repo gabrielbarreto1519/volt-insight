@@ -129,20 +129,19 @@ export function CreditRiskTab() {
       {annualKPIs && (counterparty || year === 'Todos') && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <KpiCard
-            title="Face Value"
+            title="Exposição Total"
             value={formatCurrency(annualKPIs.totalFaceValue)}
-            subtitle="Face Value"
             trend={annualKPIs.totalFaceValue >= 0 ? "up" : "down"}
             isNegative={annualKPIs.totalFaceValue < 0}
             />
           <KpiCard
-            title="Mark-to-Market"
+            title="MtM Total"
             value={formatCurrency(annualKPIs.totalMtM)}
             trend={annualKPIs.totalMtM >= 0 ? "up" : "down"}
             isNegative={annualKPIs.totalMtM < 0}
           />
           <KpiCard
-            title="Profit and Loss"
+            title="P&L Total"
             value={formatCurrency(annualKPIs.totalPL)}
             trend={annualKPIs.totalPL >= 0 ? "up" : "down"}
             isNegative={annualKPIs.totalPL < 0}
