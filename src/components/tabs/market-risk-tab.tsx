@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RiskFilters } from '@/components/filters/risk-filters';
 import { ChartContainer } from '@/components/ui/chart-container';
 import { KpiCard } from '@/components/ui/kpi-card';
+import { RiskDistributionKpi } from '@/components/ui/risk-distribution-kpi';
 import { FinancialLineChart } from '@/components/charts/financial-line-chart';
 import { loadExcelFile, processRiskData, fillMissingMonths, RiskData, formatCurrency, formatNumber, formatPercent } from '@/lib/data-processing';
 
@@ -249,11 +250,10 @@ export function MarketRiskTab() {
             trend={annualKPIs.plTotal >= 0 ? "up" : "down"}
             isNegative={annualKPIs.plTotal < 0}
           />
-          <KpiCard
-            title="Distribuição de Risco"
-            value={formatPercent(annualKPIs.energyPercentage)}
-            subtitle={`Submercado: ${formatPercent(annualKPIs.submarketPercentage)} | Fonte: ${formatPercent(annualKPIs.sourcePercentage)}`}
-            trend="neutral"
+          <RiskDistributionKpi
+            energyPercentage={annualKPIs.energyPercentage}
+            submarketPercentage={annualKPIs.submarketPercentage}
+            sourcePercentage={annualKPIs.sourcePercentage}
           />
         </div>
       )}
