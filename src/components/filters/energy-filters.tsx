@@ -26,7 +26,7 @@ export function EnergyFilters({
   setYear,
   isFinancialMode,
   setIsFinancialMode,
-  availableYears = ['2023', '2024', '2025'],
+  availableYears = ['Todos', '2023', '2024', '2025'],
   availableEnergySource = ['Convencional', 'Renovável'],
   availableSubmarkets = ['N', 'S', 'SE/CO', 'NE'],
 }: EnergyFiltersProps) {

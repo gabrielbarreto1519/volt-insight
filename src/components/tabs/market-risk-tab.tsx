@@ -44,23 +44,38 @@ export function MarketRiskTab() {
     ? null 
     : yearlyRiskData.find(d => d.year === parseInt(year));
 
-  // Get available options from data for dynamic filters
-  const availableYears = [...new Set([...monthlyRiskData.map(d => d.year.toString()), ...yearlyRiskData.map(d => d.year?.toString())])].filter(Boolean).sort();
+  // Get available options from data for dynamic filters (including "Todos" option)
+  const availableYears = ['Todos', ...[...new Set([...monthlyRiskData.map(d => d.year.toString()), ...yearlyRiskData.map(d => d.year?.toString())])].filter(Boolean).sort()];
   const availableProdutos = ['Energia', 'Fonte', 'Submercado']; // These are based on the data structure
 
   // Get annual KPIs
   const getAnnualKPIs = () => {
     if (year === 'Todos') {
-      // Calculate accumulated KPIs from yearly data
-      const totalVaR = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_total '] || 0) : (d[' CVaR_total '] || 0)), 0);
-      const totalMtM = yearlyRiskData.reduce((sum, d) => sum + (d[' mtm '] || 0), 0);
-      const totalExposure = yearlyRiskData.reduce((sum, d) => sum + (d[' faceValue '] || 0), 0);
-      const totalPL = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' profitLossTotal_VaR '] || 0) : (d[' profitLossTotal_CVaR '] || 0)), 0);
+      // Calculate accumulated KPIs from yearly data - try multiple field name variations
+      const totalVaR = yearlyRiskData.reduce((sum, d) => {
+        const value = isVaR ? (d[' VaR_total '] || d['VaR_total'] || d.VaR_total || 0) : (d[' CVaR_total '] || d['CVaR_total'] || d.CVaR_total || 0);
+        return sum + value;
+      }, 0);
+      const totalMtM = yearlyRiskData.reduce((sum, d) => sum + (d[' mtm '] || d['mtm'] || d.mtm || 0), 0);
+      const totalExposure = yearlyRiskData.reduce((sum, d) => sum + (d[' faceValue '] || d['faceValue'] || d.faceValue || 0), 0);
+      const totalPL = yearlyRiskData.reduce((sum, d) => {
+        const value = isVaR ? (d[' profitLossTotal_VaR '] || d['profitLossTotal_VaR'] || d.profitLossTotal_VaR || 0) : (d[' profitLossTotal_CVaR '] || d['profitLossTotal_CVaR'] || d.profitLossTotal_CVaR || 0);
+        return sum + value;
+      }, 0);
       
-      // Calculate weighted percentages based on total risk
-      const totalEnergyRisk = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_energy '] || 0) : (d[' CVaR_energy '] || 0)), 0);
-      const totalSourceRisk = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_source '] || 0) : (d[' CVaR_source '] || 0)), 0);
-      const totalSubmarketRisk = yearlyRiskData.reduce((sum, d) => sum + (isVaR ? (d[' VaR_submarket '] || 0) : (d[' CVaR_submarket '] || 0)), 0);
+      // Calculate weighted percentages based on total risk - try multiple field name variations
+      const totalEnergyRisk = yearlyRiskData.reduce((sum, d) => {
+        const value = isVaR ? (d[' VaR_energy '] || d['VaR_energy'] || d.VaR_energy || 0) : (d[' CVaR_energy '] || d['CVaR_energy'] || d.CVaR_energy || 0);
+        return sum + value;
+      }, 0);
+      const totalSourceRisk = yearlyRiskData.reduce((sum, d) => {
+        const value = isVaR ? (d[' VaR_source '] || d['VaR_source'] || d.VaR_source || 0) : (d[' CVaR_source '] || d['CVaR_source'] || d.CVaR_source || 0);
+        return sum + value;
+      }, 0);
+      const totalSubmarketRisk = yearlyRiskData.reduce((sum, d) => {
+        const value = isVaR ? (d[' VaR_submarket '] || d['VaR_submarket'] || d.VaR_submarket || 0) : (d[' CVaR_submarket '] || d['CVaR_submarket'] || d.CVaR_submarket || 0);
+        return sum + value;
+      }, 0);
       
       const totalRisk = Math.abs(totalEnergyRisk) + Math.abs(totalSourceRisk) + Math.abs(totalSubmarketRisk);
       
@@ -77,16 +92,17 @@ export function MarketRiskTab() {
     
     if (!currentYearData) return null;
     
-    const varTotal = isVaR ? currentYearData[' VaR_total '] : currentYearData[' CVaR_total '];
-    const plTotal = isVaR ? currentYearData[' profitLossTotal_VaR '] : currentYearData[' profitLossTotal_CVaR '];
-    const energyPercentage = isVaR ? currentYearData.percentageVaRenergy : currentYearData.percentageCVaRenergy;
-    const submarketPercentage = isVaR ? currentYearData.percentageVaRsubmarket : currentYearData.percentageCVaRsubmarket;
-    const sourcePercentage = isVaR ? currentYearData.percentageVaRsource : currentYearData.percentageCVaRsource;
+    // Try multiple field name variations for compatibility
+    const varTotal = isVaR ? (currentYearData[' VaR_total '] || currentYearData['VaR_total'] || currentYearData.VaR_total) : (currentYearData[' CVaR_total '] || currentYearData['CVaR_total'] || currentYearData.CVaR_total);
+    const plTotal = isVaR ? (currentYearData[' profitLossTotal_VaR '] || currentYearData['profitLossTotal_VaR'] || currentYearData.profitLossTotal_VaR) : (currentYearData[' profitLossTotal_CVaR '] || currentYearData['profitLossTotal_CVaR'] || currentYearData.profitLossTotal_CVaR);
+    const energyPercentage = isVaR ? (currentYearData.percentageVaRenergy || currentYearData['percentageVaRenergy']) : (currentYearData.percentageCVaRenergy || currentYearData['percentageCVaRenergy']);
+    const submarketPercentage = isVaR ? (currentYearData.percentageVaRsubmarket || currentYearData['percentageVaRsubmarket']) : (currentYearData.percentageCVaRsubmarket || currentYearData['percentageCVaRsubmarket']);
+    const sourcePercentage = isVaR ? (currentYearData.percentageVaRsource || currentYearData['percentageVaRsource']) : (currentYearData.percentageCVaRsource || currentYearData['percentageCVaRsource']);
     
     return {
       varTotal,
-      mtmTotal: currentYearData[' mtm '] || 0, // MtM Total usando coluna mtm da planilha downside risk - year
-      exposicaoTotal: currentYearData[' faceValue '] || 0, // Exposição Total usando faceValue da planilha downside risk - year
+      mtmTotal: currentYearData[' mtm '] || currentYearData['mtm'] || currentYearData.mtm || 0,
+      exposicaoTotal: currentYearData[' faceValue '] || currentYearData['faceValue'] || currentYearData.faceValue || 0,
       plTotal,
       energyPercentage,
       submarketPercentage,
@@ -107,7 +123,7 @@ export function MarketRiskTab() {
     }
   };
 
-  const exposureChartData = fillMissingMonths(
+  const exposureChartData = year !== 'Todos' ? fillMissingMonths(
     filteredMonthlyData.map(d => ({
       month: d.month,
       year: d.year,
@@ -116,10 +132,10 @@ export function MarketRiskTab() {
     })),
     parseInt(year),
     { productRisk: 0, totalRisk: 0 }
-  );
+  ) : [];
 
   // Prepare percentage decomposition chart data
-  const percentageChartData = fillMissingMonths(
+  const percentageChartData = year !== 'Todos' ? fillMissingMonths(
     filteredMonthlyData.map(d => ({
       month: d.month,
       year: d.year,
@@ -129,10 +145,10 @@ export function MarketRiskTab() {
     })),
     parseInt(year),
     { energyPercent: 0, sourcePercent: 0, submarketPercent: 0 }
-  );
+  ) : [];
 
   // Prepare P&L + Risk measure chart data
-  const plRiskChartData = fillMissingMonths(
+  const plRiskChartData = year !== 'Todos' ? fillMissingMonths(
     filteredMonthlyData.map(d => ({
       month: d.month,
       year: d.year,
@@ -142,10 +158,12 @@ export function MarketRiskTab() {
     })),
     parseInt(year),
     { profitLoss: 0, profitLossNormal: 0, riskMeasure: 0 }
-  );
+  ) : [];
 
   // Prepare volume chart data based on product selection
   const getVolumeData = () => {
+    if (year === 'Todos') return [];
+    
     switch (produto) {
       case 'Energia':
         return fillMissingMonths(
@@ -221,6 +239,7 @@ export function MarketRiskTab() {
             title="Exposição Total"
             value={formatCurrency(annualKPIs.exposicaoTotal)}
             trend={annualKPIs.exposicaoTotal >= 0 ? "up" : "down"}
+            isNegative={annualKPIs.exposicaoTotal < 0}
           />
           <KpiCard
             title="P&L Estressado"

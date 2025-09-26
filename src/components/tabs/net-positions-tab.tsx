@@ -32,9 +32,9 @@ export function NetPositionsTab() {
     loadData();
   }, []);
 
-  // Filter data based on selections with support for financial mode
+  // Filter data based on selections with support for financial mode and "Todos" year selection
   const filteredPmixData = pmixData.filter(d => {
-    const yearMatch = d.year === parseInt(year);
+    const yearMatch = year === 'Todos' || d.year === parseInt(year);
     if (isFinancialMode) {
       // In financial mode, include all energy sources and submarkets
       return yearMatch;
@@ -47,7 +47,7 @@ export function NetPositionsTab() {
   });
 
   const filteredNetData = netData.filter(d => {
-    const yearMatch = d.year === parseInt(year);
+    const yearMatch = year === 'Todos' || d.year === parseInt(year);
     if (isFinancialMode) {
       // In financial mode, include all energy sources and submarkets
       return yearMatch;
@@ -190,8 +190,8 @@ export function NetPositionsTab() {
     { faceValue: 0 }
   );
 
-  // Get available options from data for dynamic filters (excluding "Todas" options)
-  const availableYears = [...new Set([...pmixData.map(d => d.year.toString()), ...netData.map(d => d.year.toString())])].sort();
+  // Get available options from data for dynamic filters (including "Todos" option)
+  const availableYears = ['Todos', ...[...new Set([...pmixData.map(d => d.year.toString()), ...netData.map(d => d.year.toString())])].sort()];
   const availableEnergySource = [...new Set([...pmixData.map(d => d.energySourceDescription), ...netData.map(d => d.energySourceDescription)])].filter(Boolean);
   const availableSubmarkets = [...new Set([...pmixData.map(d => d.submarketDescription), ...netData.map(d => d.submarketDescription)])].filter(Boolean);
 
@@ -226,6 +226,7 @@ export function NetPositionsTab() {
           value={formatCurrency(totalExposure)}
           subtitle="Face Value"
           trend="neutral"
+          isNegative={totalExposure < 0}
         />
         <KpiCard
           title="MtM Total"

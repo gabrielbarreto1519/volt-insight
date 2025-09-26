@@ -237,6 +237,7 @@ export function CounterpartyProductPositionsTab() {
             value={formatCurrency(kpis.totalFaceValue)}
             subtitle="Face Value"
             trend={kpis.totalFaceValue >= 0 ? "up" : "down"}
+            isNegative={kpis.totalFaceValue < 0}
           />
           <KpiCard
             title="MtM Total"

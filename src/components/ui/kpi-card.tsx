@@ -7,9 +7,10 @@ interface KpiCardProps {
   subtitle?: string;
   trend?: "up" | "down" | "neutral";
   className?: string;
+  isNegative?: boolean; // New prop to handle negative face values
 }
 
-export function KpiCard({ title, value, subtitle, trend, className }: KpiCardProps) {
+export function KpiCard({ title, value, subtitle, trend, className, isNegative }: KpiCardProps) {
   const getTrendColor = () => {
     switch (trend) {
       case "up":
@@ -24,7 +25,9 @@ export function KpiCard({ title, value, subtitle, trend, className }: KpiCardPro
   return (
     <Card className={cn("kpi-card smooth-transition hover:shadow-lg", className)}>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <CardTitle className={cn("text-sm font-medium", isNegative ? "text-destructive" : "text-muted-foreground")}>
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="text-2xl font-bold text-foreground">{value}</div>
