@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Textfit } from 'react-textfit';
 
 interface KpiCardProps {
   title: string;
@@ -61,12 +62,22 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className={cn(
-          "text-lg sm:text-xl md:text-2xl font-bold text-foreground",
-          "whitespace-nowrap overflow-hidden text-ellipsis",
-          "leading-tight"
-        )}>
-          {value}
+        <div className="h-8 flex items-center">
+          <Textfit 
+            mode="single" 
+            min={12} 
+            max={40}
+            style={{
+              width: '100%',
+              height: '100%',
+              fontWeight: 'bold',
+              color: 'hsl(var(--foreground))',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden'
+            }}
+          >
+            {value}
+          </Textfit>
         </div>
       </CardContent>
     </Card>
