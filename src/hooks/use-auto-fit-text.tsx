@@ -1,74 +1,82 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
+import fitty from 'fitty';
 
-interface UseAutoFitTextOptions {
+interface UseFittyOptions {
   minSize?: number;
   maxSize?: number;
-  step?: number;
+  multiLine?: boolean;
 }
 
-export function useAutoFitText({
+export function useFitty({
   minSize = 12,
-  maxSize = 40,
-  step = 1
-}: UseAutoFitTextOptions = {}) {
+  maxSize = 44,
+  multiLine = false
+}: UseFittyOptions = {}) {
   const elementRef = useRef<HTMLElement>(null);
-
-  const fitText = useCallback(() => {
-    const element = elementRef.current;
-    if (!element) return;
-
-    const parent = element.parentElement;
-    if (!parent) return;
-
-    let fontSize = maxSize;
-    element.style.fontSize = `${fontSize}px`;
-
-    // Fit to width
-    while (element.scrollWidth > parent.clientWidth && fontSize > minSize) {
-      fontSize -= step;
-      element.style.fontSize = `${fontSize}px`;
-    }
-
-    // Ensure no vertical clipping
-    while (element.scrollHeight > parent.clientHeight && fontSize > minSize) {
-      fontSize -= step;
-      element.style.fontSize = `${fontSize}px`;
-    }
-  }, [minSize, maxSize, step]);
 
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
 
-    // Initial fit
-    fitText();
+    // Reset font-size to prevent accumulation
+    element.style.fontSize = '';
 
-    // Set up ResizeObserver for responsive behavior
-    const resizeObserver = new ResizeObserver(() => {
-      fitText();
+    // Apply base styles for consistent behavior
+    element.style.whiteSpace = 'nowrap';
+    element.style.lineHeight = '1.1';
+    element.style.overflow = 'hidden';
+    element.style.transition = 'font-size 120ms ease-out';
+
+    // Initialize fitty
+    const fittyInstance = fitty(element, {
+      minSize,
+      maxSize,
+      multiLine,
+      observeMutations: {
+        subtree: true,
+        characterData: true,
+        childList: true
+      }
     });
 
-    resizeObserver.observe(element);
-    if (element.parentElement) {
-      resizeObserver.observe(element.parentElement);
-    }
+    // Handle edge case: if text doesn't fit even at minSize, increase container height
+    const checkAndAdjustContainer = () => {
+      setTimeout(() => {
+        if (element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight) {
+          const card = element.closest('.kpi-card, .risk-distribution-kpi');
+          if (card) {
+            const currentHeight = card.clientHeight;
+            const neededHeight = Math.max(currentHeight, element.scrollHeight + 32);
+            (card as HTMLElement).style.minHeight = `${neededHeight}px`;
+          }
+        }
+      }, 150); // Wait for fitty to complete
+    };
 
-    // Set up MutationObserver for content changes
-    const mutationObserver = new MutationObserver(() => {
-      fitText();
-    });
+    // Initial check
+    checkAndAdjustContainer();
 
-    mutationObserver.observe(element, {
-      childList: true,
-      subtree: true,
-      characterData: true
-    });
+    // Re-check on window resize with debounce
+    let resizeTimeout: number;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(() => {
+        fittyInstance.fit();
+        checkAndAdjustContainer();
+      }, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      resizeObserver.disconnect();
-      mutationObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+      fittyInstance.unsubscribe();
     };
-  }, [fitText]);
+  }, [minSize, maxSize, multiLine]);
 
   return elementRef;
 }
+
+// Alias for backward compatibility
+export const useAutoFitText = useFitty;

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useAutoFitText } from "@/hooks/use-auto-fit-text";
+import { useFitty } from "@/hooks/use-auto-fit-text";
 
 interface KpiCardProps {
   title: string;
@@ -12,7 +12,7 @@ interface KpiCardProps {
 }
 
 export function KpiCard({ title, value, subtitle, trend, className, isNegative }: KpiCardProps) {
-  const valueRef = useAutoFitText({ minSize: 12, maxSize: 40 });
+  const valueRef = useFitty({ minSize: 12, maxSize: 44, multiLine: false });
   
   const getTrendColor = () => {
     switch (trend) {
@@ -53,30 +53,29 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
   };
 
   return (
-    <Card className={cn("kpi-card smooth-transition hover:shadow-lg flex flex-col", className)}>
-      <CardHeader className="pb-2 flex-shrink-0">
+    <Card className={cn("kpi-card smooth-transition hover:shadow-lg", className)} 
+          style={{ display: 'grid', gridTemplateRows: 'auto 1fr', rowGap: '8px', padding: '16px', borderRadius: '16px' }}>
+      <CardHeader className="p-0">
         <CardTitle className={cn(
-          "text-sm font-medium leading-tight", 
+          "text-sm font-semibold", 
           "whitespace-nowrap overflow-hidden text-ellipsis",
           getTitleColor()
-        )}>
+        )}
+        style={{ lineHeight: '1.15' }}>
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-0 pb-3 flex-grow flex items-start">
-        <div className="w-full overflow-visible">
-          <span 
-            ref={valueRef}
-            className="w-full font-bold whitespace-nowrap overflow-visible"
-            style={{
-              color: 'hsl(var(--foreground))',
-              lineHeight: '1',
-              display: 'block'
-            }}
-          >
-            {value}
-          </span>
-        </div>
+      <CardContent className="p-0 flex items-center">
+        <span 
+          ref={valueRef}
+          className="w-full font-bold"
+          style={{
+            color: 'hsl(var(--foreground))',
+            display: 'block'
+          }}
+        >
+          {value}
+        </span>
       </CardContent>
     </Card>
   );

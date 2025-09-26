@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useAutoFitText } from "@/hooks/use-auto-fit-text";
+import { useFitty } from "@/hooks/use-auto-fit-text";
 
 interface RiskDistributionKpiProps {
   energyPercentage: number;
@@ -17,63 +17,56 @@ export function RiskDistributionKpi({
 }: RiskDistributionKpiProps) {
   const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
   
-  const energyRef = useAutoFitText({ minSize: 12, maxSize: 22 });
-  const submarketRef = useAutoFitText({ minSize: 12, maxSize: 22 });
-  const sourceRef = useAutoFitText({ minSize: 12, maxSize: 22 });
+  const energyRef = useFitty({ minSize: 12, maxSize: 22, multiLine: false });
+  const submarketRef = useFitty({ minSize: 12, maxSize: 22, multiLine: false });
+  const sourceRef = useFitty({ minSize: 12, maxSize: 22, multiLine: false });
 
   return (
-    <Card className={cn("risk-distribution-kpi smooth-transition hover:shadow-lg", className)}>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium leading-tight whitespace-nowrap overflow-hidden text-ellipsis text-foreground">
+    <Card className={cn("risk-distribution-kpi smooth-transition hover:shadow-lg", className)}
+          style={{ display: 'grid', gridTemplateRows: 'auto 1fr', rowGap: '10px', padding: '16px', borderRadius: '16px' }}>
+      <CardHeader className="p-0">
+        <CardTitle className="text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis"
+                   style={{ lineHeight: '1.15' }}>
           Distribuição de Risco
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-0 pb-3">
-        <div className="grid grid-rows-3 gap-1 h-full">
+      <CardContent className="p-0">
+        <div style={{ display: 'grid', gridAutoRows: '1fr', rowGap: '7px' }}>
           {/* Energia - Violet #5370EA */}
-          <div className="flex items-center overflow-visible">
-            <span 
-              ref={energyRef}
-              className="w-full font-semibold whitespace-nowrap overflow-visible"
-              style={{
-                color: '#5370EA',
-                lineHeight: '1.1',
-                display: 'block'
-              }}
-            >
-              {formatPercent(energyPercentage)} - Energia
-            </span>
-          </div>
+          <span 
+            ref={energyRef}
+            className="w-full font-semibold"
+            style={{
+              color: '#5370EA',
+              display: 'block'
+            }}
+          >
+            {formatPercent(energyPercentage)} - Energia
+          </span>
           
           {/* Submercado - Crimson Red #B40833 */}
-          <div className="flex items-center overflow-visible">
-            <span 
-              ref={submarketRef}
-              className="w-full font-semibold whitespace-nowrap overflow-visible"
-              style={{
-                color: '#B40833',
-                lineHeight: '1.1',
-                display: 'block'
-              }}
-            >
-              {formatPercent(submarketPercentage)} - Submercado
-            </span>
-          </div>
+          <span 
+            ref={submarketRef}
+            className="w-full font-semibold"
+            style={{
+              color: '#B40833',
+              display: 'block'
+            }}
+          >
+            {formatPercent(submarketPercentage)} - Submercado
+          </span>
           
           {/* Fonte - Cerulean Blue #3A4FA5 */}
-          <div className="flex items-center overflow-visible">
-            <span 
-              ref={sourceRef}
-              className="w-full font-semibold whitespace-nowrap overflow-visible"
-              style={{
-                color: '#3A4FA5',
-                lineHeight: '1.1',
-                display: 'block'
-              }}
-            >
-              {formatPercent(sourcePercentage)} - Fonte
-            </span>
-          </div>
+          <span 
+            ref={sourceRef}
+            className="w-full font-semibold"
+            style={{
+              color: '#3A4FA5',
+              display: 'block'
+            }}
+          >
+            {formatPercent(sourcePercentage)} - Fonte
+          </span>
         </div>
       </CardContent>
     </Card>
