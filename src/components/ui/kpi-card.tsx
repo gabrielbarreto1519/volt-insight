@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Textfit } from 'react-textfit';
+import { useAutoFitText } from "@/hooks/use-auto-fit-text";
 
 interface KpiCardProps {
   title: string;
@@ -12,6 +12,8 @@ interface KpiCardProps {
 }
 
 export function KpiCard({ title, value, subtitle, trend, className, isNegative }: KpiCardProps) {
+  const valueRef = useAutoFitText({ minSize: 12, maxSize: 40 });
+  
   const getTrendColor = () => {
     switch (trend) {
       case "up":
@@ -63,22 +65,17 @@ export function KpiCard({ title, value, subtitle, trend, className, isNegative }
       </CardHeader>
       <CardContent className="pt-0 pb-3 flex-grow flex items-start">
         <div className="w-full overflow-visible">
-          <Textfit 
-            mode="single" 
-            min={12} 
-            max={40}
+          <span 
+            ref={valueRef}
+            className="w-full font-bold whitespace-nowrap overflow-visible"
             style={{
-              width: '100%',
-              fontWeight: 'bold',
               color: 'hsl(var(--foreground))',
-              whiteSpace: 'nowrap',
-              overflow: 'visible',
               lineHeight: '1',
               display: 'block'
             }}
           >
             {value}
-          </Textfit>
+          </span>
         </div>
       </CardContent>
     </Card>

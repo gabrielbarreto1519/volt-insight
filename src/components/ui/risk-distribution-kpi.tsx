@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Textfit } from 'react-textfit';
+import { useAutoFitText } from "@/hooks/use-auto-fit-text";
 
 interface RiskDistributionKpiProps {
   energyPercentage: number;
@@ -16,6 +16,10 @@ export function RiskDistributionKpi({
   className 
 }: RiskDistributionKpiProps) {
   const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
+  
+  const energyRef = useAutoFitText({ minSize: 12, maxSize: 22 });
+  const submarketRef = useAutoFitText({ minSize: 12, maxSize: 22 });
+  const sourceRef = useAutoFitText({ minSize: 12, maxSize: 22 });
 
   return (
     <Card className={cn("risk-distribution-kpi smooth-transition hover:shadow-lg", className)}>
@@ -28,62 +32,47 @@ export function RiskDistributionKpi({
         <div className="grid grid-rows-3 gap-1 h-full">
           {/* Energia - Violet #5370EA */}
           <div className="flex items-center overflow-visible">
-            <Textfit 
-              mode="single" 
-              min={12} 
-              max={22}
+            <span 
+              ref={energyRef}
+              className="w-full font-semibold whitespace-nowrap overflow-visible"
               style={{
-                width: '100%',
-                fontWeight: '600',
                 color: '#5370EA',
-                whiteSpace: 'nowrap',
-                overflow: 'visible',
                 lineHeight: '1.1',
                 display: 'block'
               }}
             >
               {formatPercent(energyPercentage)} - Energia
-            </Textfit>
+            </span>
           </div>
           
           {/* Submercado - Crimson Red #B40833 */}
           <div className="flex items-center overflow-visible">
-            <Textfit 
-              mode="single" 
-              min={12} 
-              max={22}
+            <span 
+              ref={submarketRef}
+              className="w-full font-semibold whitespace-nowrap overflow-visible"
               style={{
-                width: '100%',
-                fontWeight: '600',
                 color: '#B40833',
-                whiteSpace: 'nowrap',
-                overflow: 'visible',
                 lineHeight: '1.1',
                 display: 'block'
               }}
             >
               {formatPercent(submarketPercentage)} - Submercado
-            </Textfit>
+            </span>
           </div>
           
           {/* Fonte - Cerulean Blue #3A4FA5 */}
           <div className="flex items-center overflow-visible">
-            <Textfit 
-              mode="single" 
-              min={12} 
-              max={22}
+            <span 
+              ref={sourceRef}
+              className="w-full font-semibold whitespace-nowrap overflow-visible"
               style={{
-                width: '100%',
-                fontWeight: '600',
                 color: '#3A4FA5',
-                whiteSpace: 'nowrap',
-                overflow: 'visible',
                 lineHeight: '1.1',
                 display: 'block'
               }}
             >
               {formatPercent(sourcePercentage)} - Fonte
-            </Textfit>
+            </span>
           </div>
         </div>
       </CardContent>
