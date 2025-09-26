@@ -226,22 +226,22 @@ export function ProductPositionsTab() {
           />
         )}
         <KpiCard
-          title="Exposição Total"
+          title="Face Value"
           value={formatCurrency(totalExposure)}
           subtitle="Face Value"
           trend={totalExposure >= 0 ? "up" : "down"}
           isNegative={totalExposure < 0}
         />
         <KpiCard
-          title="MtM Total"
+          title="Mark-to-Market"
           value={formatCurrency(totalMtm)}
           subtitle="Mark-to-Market"
           trend={totalMtm >= 0 ? "up" : "down"}
         />
         <KpiCard
-          title="P&L Total"
+          title="Profit and Loss"
           value={formatCurrency(totalProfitLoss)}
-          subtitle="Profit & Loss"
+          subtitle="Profit and Loss"
           trend={totalProfitLoss >= 0 ? "up" : "down"}
         />
       </div>
