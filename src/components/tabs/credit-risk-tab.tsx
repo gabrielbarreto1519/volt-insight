@@ -39,16 +39,20 @@ export function CreditRiskTab() {
   const filteredData = counterpartyData.filter(d => {
     // Always filter by counterparty when it's selected
     const matchesCounterparty = d.counterparty === counterparty;
-    const matchesYear = year === 'Todos' || d.year === parseInt(year);
+    const isAllYear = year?.trim().toLowerCase() === '__all__' || year?.trim().toLowerCase() === 'todos';
+    const matchesYear = isAllYear || d.year === parseInt(year);
     return matchesCounterparty && matchesYear;
   });
 
   // Get available options from data for dynamic filters (including "Todos" option)
-  const availableYears = ['Todos', ...[...new Set(counterpartyData.map(d => d.year.toString()))].sort()];
+  const availableYears = [...new Set(counterpartyData.map(d => d.year.toString().trim()))]
+    .filter((y) => y.toLowerCase() !== 'todos')
+    .sort();
 
   // Calculate annual KPIs for selected counterparty and year
   const getAnnualKPIs = () => {
-    if ((year !== 'Todos' && !counterparty) || filteredData.length === 0) return null;
+    const isAllYearLocal = year?.trim().toLowerCase() === '__all__' || year?.trim().toLowerCase() === 'todos';
+    if ((!isAllYearLocal && !counterparty) || filteredData.length === 0) return null;
     
     const totalFaceValue = aggregateByYear(filteredData, 'faceValue');
     const totalMtM = aggregateByYear(filteredData, 'MtM');
@@ -64,7 +68,8 @@ export function CreditRiskTab() {
   };
 
   const annualKPIs = getAnnualKPIs();
-  const showCharts = year !== 'Todos';
+  const isAllYear = year?.trim().toLowerCase() === '__all__' || year?.trim().toLowerCase() === 'todos';
+  const showCharts = !isAllYear;
 
   // Prepare chart data only when showing charts
   const netPositionChartData = showCharts ? fillMissingMonths(

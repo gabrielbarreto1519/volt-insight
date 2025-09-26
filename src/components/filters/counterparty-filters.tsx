@@ -13,7 +13,7 @@ interface CounterpartyFiltersProps {
 }
 
 const YEARS = ["2025", "2026", "2027"];
-const YEARS_WITH_ALL = ["Todos", ...YEARS];
+// Removed YEARS_WITH_ALL - 'Todos' handled as separate option with value '__ALL__'
 const SUBMARKETS = ["N", "NE", "SE", "S"];
 
 export function CounterpartyFilters({
@@ -26,8 +26,14 @@ export function CounterpartyFilters({
   availableCounterparties,
   availableYears,
 }: CounterpartyFiltersProps) {
-  // Use dynamic data when available, fallback to hardcoded values with "Todos" option
-  const years = availableYears ? ["Todos", ...availableYears] : YEARS_WITH_ALL;
+  // Normalize, deduplicate, and sort years; "Todos" injected as dedicated option
+  const normalizedYears = (availableYears && availableYears.length > 0 ? availableYears : YEARS)
+    .map((y) => y.toString().trim())
+    .filter((y) => y && y.toLowerCase() !== 'todos');
+  const years = Array.from(new Set(normalizedYears)).sort();
+  const selectedYearValue = year?.toString().trim().toLowerCase() === 'todos' || year?.toString().trim().toLowerCase() === '__all__' ? '__ALL__' : year;
+  const handleYearChange = (val: string) => setYear(val === '__ALL__' ? '__ALL__' : val);
+  const displayYearLabel = selectedYearValue === '__ALL__' ? 'Todos' : year;
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border">
       <div className="flex flex-col gap-2">
@@ -51,7 +57,7 @@ export function CounterpartyFilters({
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-muted-foreground">Ano</label>
-        <Select value={year} onValueChange={setYear}>
+        <Select value={selectedYearValue} onValueChange={handleYearChange}>
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Selecione o ano" />
           </SelectTrigger>
@@ -59,8 +65,9 @@ export function CounterpartyFilters({
             sideOffset={4}
             className="max-h-[300px] overflow-y-auto z-[1000]"
           >
+            <SelectItem key="year-__ALL__" value="__ALL__">Todos</SelectItem>
             {years.map((yr) => (
-              <SelectItem key={yr} value={yr}>
+              <SelectItem key={`year-${yr}`} value={yr}>
                 {yr}
               </SelectItem>
             ))}
@@ -71,7 +78,7 @@ export function CounterpartyFilters({
 
       <div className="flex items-end gap-2">
         <Badge variant="outline" className="text-primary border-primary">
-          {counterparty} | {year}
+          {counterparty} | {displayYearLabel}
         </Badge>
       </div>
     </div>
