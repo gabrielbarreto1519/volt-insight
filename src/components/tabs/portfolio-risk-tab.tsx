@@ -198,57 +198,8 @@ export function PortfolioRiskTab() {
         </Table>
       </div>
 
-      {/* Comparative Chart */}
-      <ChartContainer
-        title="Distribuição de PMA: Real vs Alvo"
-        description="Comparação da distribuição percentual de PMA por faixa de risco"
-      >
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis 
-              dataKey="name" 
-              stroke="hsl(var(--muted-foreground))"
-              angle={-45}
-              textAnchor="end"
-              height={100}
-              tick={{ fontSize: 12 }}
-            />
-            <YAxis 
-              stroke="hsl(var(--muted-foreground))"
-              label={{ value: '% da PMA', angle: -90, position: 'insideLeft' }}
-            />
-            <Tooltip 
-              contentStyle={{
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px',
-              }}
-              formatter={(value: number) => `${formatNumber(value, 2)}%`}
-            />
-            <Legend 
-              wrapperStyle={{ paddingTop: '20px' }}
-              iconType="rect"
-            />
-            <Bar dataKey="Real" fill="hsl(var(--chart-1))" name="Real" radius={[4, 4, 0, 0]}>
-              {chartData.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={entry.isOverTarget ? 'hsl(var(--loss))' : 'hsl(var(--chart-1))'}
-                />
-              ))}
-            </Bar>
-            <Bar dataKey="Alvo" fill="hsl(var(--chart-2))" name="Alvo" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </ChartContainer>
-
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="rounded-lg border border-border bg-card p-4">
-          <div className="text-sm text-muted-foreground mb-1">Total Expected Loss</div>
-          <div className="text-2xl font-bold text-foreground">{formatCurrency(totalEL)}</div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="rounded-lg border border-border bg-card p-4">
           <div className="text-sm text-muted-foreground mb-1">PMA Real Total (R$ mil)</div>
           <div className="text-2xl font-bold text-foreground">{formatNumber(totalEL / 1000, 2)}</div>
