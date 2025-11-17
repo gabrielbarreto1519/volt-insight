@@ -30,22 +30,22 @@ import {
 
 // Risk bucket mapping
 const RISK_BUCKET_MAP: Record<string, string> = {
-  '1A': 'Baixíssimo risco',
-  '2B': 'Baixo risco',
-  '3C': 'Médio risco 1',
-  '4D': 'Médio risco 2',
-  '5E': 'Alto risco',
-  '6F': 'Altíssimo risco',
+  '1A': 'Baixíssimo Risco (1A)',
+  '2B': 'Baixo Risco (2B)',
+  '3C': 'Médio Risco 1 (3C)',
+  '4D': 'Médio Risco 2 (4D)',
+  '5E': 'Alto Risco (5E)',
+  '6F': 'Altíssimo Risco (6F)',
 };
 
 // Target PMA distribution
 const TARGET_DISTRIBUTION = {
-  'Baixíssimo risco': { percentage: 7, pma: 220 },
-  'Baixo risco': { percentage: 13, pma: 397 },
-  'Médio risco 1': { percentage: 38, pma: 1133 },
-  'Médio risco 2': { percentage: 42, pma: 1250 },
-  'Alto risco': { percentage: 0, pma: 0 },
-  'Altíssimo risco': { percentage: 0, pma: 0 },
+  'Baixíssimo Risco (1A)': { percentage: 7, pma: 220 },
+  'Baixo Risco (2B)': { percentage: 13, pma: 397 },
+  'Médio Risco 1 (3C)': { percentage: 38, pma: 1133 },
+  'Médio Risco 2 (4D)': { percentage: 42, pma: 1250 },
+  'Alto Risco (5E)': { percentage: 0, pma: 0 },
+  'Altíssimo Risco (6F)': { percentage: 0, pma: 0 },
 };
 
 const TARGET_TOTAL_PMA = 3000;
@@ -105,12 +105,12 @@ export function PortfolioRiskTab() {
         
         // Build bucket data array
         const orderedBuckets = [
-          'Baixíssimo risco',
-          'Baixo risco',
-          'Médio risco 1',
-          'Médio risco 2',
-          'Alto risco',
-          'Altíssimo risco',
+          'Baixíssimo Risco (1A)',
+          'Baixo Risco (2B)',
+          'Médio Risco 1 (3C)',
+          'Médio Risco 2 (4D)',
+          'Alto Risco (5E)',
+          'Altíssimo Risco (6F)',
         ];
         
         const bucketArray: RiskBucketData[] = orderedBuckets.map(bucket => {
