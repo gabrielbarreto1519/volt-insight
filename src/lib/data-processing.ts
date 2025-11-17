@@ -105,6 +105,41 @@ export interface CounterpartyProductData {
   profitLoss: number;
 }
 
+export interface CreditExposureData {
+  counterparty: string;
+  counterpartyCode: string;
+  EPE: number;
+  PFE_year: number;
+  CVaR_year: number;
+  PD: number;
+  LGD: number;
+  EL_EPE: number;
+  EL_PFE_year: number;
+  EL_CVaR_year: number;
+  profitLoss_year: number;
+  profitLossLimit: number;
+  rating: string;
+}
+
+export interface CreditExposureMonthlyData {
+  counterparty: string;
+  counterpartyCode: string;
+  year: number;
+  month: number;
+  maturation: string;
+  profitLoss: number;
+  EE: number;
+  PFE: number;
+  CVaR: number;
+  PD: number;
+  LGD: number;
+  EL_EE: number;
+  EL_PFE: number;
+  EL_CVaR: number;
+  profitLossLimit: number;
+  rating: string;
+}
+
 export const MONTHS = [
   'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
   'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
@@ -224,6 +259,45 @@ export function processCounterpartyProductData(data: any[]): CounterpartyProduct
     mtmSource: parseFloat(item.mtmSource) || 0,
     mtmSubmarket: parseFloat(item.mtmSubmarket) || 0,
     profitLoss: parseFloat(item.profitLoss) || 0,
+  }));
+}
+
+export function processCreditExposureData(data: any[]): CreditExposureData[] {
+  return data.map(item => ({
+    counterparty: item.counterparty || '',
+    counterpartyCode: item.counterpartyCode || '',
+    EPE: parseFloat(item.EPE) || 0,
+    PFE_year: parseFloat(item.PFE_year) || 0,
+    CVaR_year: parseFloat(item.CVaR_year) || 0,
+    PD: parseFloat(item.PD) || 0,
+    LGD: parseFloat(item.LGD) || 0,
+    EL_EPE: parseFloat(item.EL_EPE) || 0,
+    EL_PFE_year: parseFloat(item.EL_PFE_year) || 0,
+    EL_CVaR_year: parseFloat(item.EL_CVaR_year) || 0,
+    profitLoss_year: parseFloat(item.profitLoss_year) || 0,
+    profitLossLimit: parseFloat(item.profitLossLimit) || 0,
+    rating: item.rating || '',
+  }));
+}
+
+export function processCreditExposureMonthlyData(data: any[]): CreditExposureMonthlyData[] {
+  return data.map(item => ({
+    counterparty: item.counterparty || '',
+    counterpartyCode: item.counterpartyCode || '',
+    year: parseInt(item.year) || 0,
+    month: parseInt(item.month) || 0,
+    maturation: item.maturation || '',
+    profitLoss: parseFloat(item.profitLoss) || 0,
+    EE: parseFloat(item.EE) || 0,
+    PFE: parseFloat(item.PFE) || 0,
+    CVaR: parseFloat(item.CVaR) || 0,
+    PD: parseFloat(item.PD) || 0,
+    LGD: parseFloat(item.LGD) || 0,
+    EL_EE: parseFloat(item.EL_EE) || 0,
+    EL_PFE: parseFloat(item.EL_PFE) || 0,
+    EL_CVaR: parseFloat(item.EL_CVaR) || 0,
+    profitLossLimit: parseFloat(item.profitLossLimit) || 0,
+    rating: item.rating || '',
   }));
 }
 
