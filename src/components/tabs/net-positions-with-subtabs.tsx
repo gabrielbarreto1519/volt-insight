@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NetPositionsTab } from '@/components/tabs/net-positions-tab';
 import { ProductPositionsTab } from '@/components/tabs/product-positions-tab';
+import { CounterpartyProductPositionsTab } from '@/components/tabs/counterparty-product-positions-tab';
 
 export function NetPositionsWithSubtabs() {
   return (
@@ -8,12 +9,15 @@ export function NetPositionsWithSubtabs() {
       <h2 className="text-2xl font-bold text-foreground">Posições Líquidas</h2>
       
       <Tabs defaultValue="positions" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6">
+        <TabsList className="grid w-full grid-cols-3 mb-6">
           <TabsTrigger value="positions" className="font-medium">
             Posições Líquidas
           </TabsTrigger>
           <TabsTrigger value="products" className="font-medium">
             Posições Líquidas em Produtos
+          </TabsTrigger>
+          <TabsTrigger value="counterparty-products" className="font-medium">
+            Posições Bilaterais em Produtos
           </TabsTrigger>
         </TabsList>
 
@@ -23,6 +27,10 @@ export function NetPositionsWithSubtabs() {
 
         <TabsContent value="products" className="space-y-6">
           <ProductPositionsTab />
+        </TabsContent>
+
+        <TabsContent value="counterparty-products" className="space-y-6">
+          <CounterpartyProductPositionsTab />
         </TabsContent>
       </Tabs>
     </div>

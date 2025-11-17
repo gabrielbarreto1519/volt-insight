@@ -114,6 +114,7 @@ export function BilateralRiskTab() {
       profitLoss: counterpartyData.profitLoss_year,
       rating: counterpartyData.rating,
       expectedLoss: counterpartyData.EL_PFE_year,
+      pfe: counterpartyData.PFE_year,
     };
   };
 
@@ -209,6 +210,42 @@ export function BilateralRiskTab() {
 
   const volumeData = getVolumesByProductType();
   const pfeData = getMonthlyPFE();
+
+  // Get monthly P&L data (GRÁFICO 3)
+  const getMonthlyPL = () => {
+    const filteredData = creditExposureMonthlyData.filter(d => 
+      d.counterparty === counterparty && 
+      d.year === parseInt(year)
+    );
+
+    const filled = fillMissingMonths(
+      filteredData,
+      parseInt(year),
+      {
+        counterparty,
+        counterpartyCode: filteredData[0]?.counterpartyCode || '',
+        maturation: '',
+        profitLoss: 0,
+        EE: 0,
+        PFE: 0,
+        CVaR: 0,
+        PD: 0,
+        LGD: 0,
+        EL_EE: 0,
+        EL_PFE: 0,
+        EL_CVaR: 0,
+        profitLossLimit: 0,
+        rating: filteredData[0]?.rating || '',
+      }
+    );
+
+    return filled.map(d => ({
+      month: d.month,
+      profitLoss: d.profitLoss,
+    }));
+  };
+
+  const plData = getMonthlyPL();
 
   const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
@@ -306,7 +343,7 @@ export function BilateralRiskTab() {
 
       {/* KPIs */}
       {kpis && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <KpiCard
             title="P&L Limit"
             value={formatCurrency(kpis.profitLossLimit)}
@@ -315,6 +352,10 @@ export function BilateralRiskTab() {
             title="P&L"
             value={formatCurrency(kpis.profitLoss)}
             isNegative={kpis.profitLoss < 0}
+          />
+          <KpiCard
+            title="Potential Future Exposure"
+            value={formatCurrency(kpis.pfe)}
           />
           <KpiCard
             title="Rating"
@@ -399,6 +440,46 @@ export function BilateralRiskTab() {
               strokeWidth={2}
               name="Potential Future Exposure"
               dot={{ fill: 'hsl(var(--chart-1))', r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartContainer>
+
+      {/* GRÁFICO 3 - P&L mensal */}
+      <ChartContainer
+        title="P&L Mensal"
+        description="Evolução mensal do P&L"
+      >
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={plData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis 
+              dataKey="month" 
+              stroke="hsl(var(--muted-foreground))"
+              tickFormatter={(value) => monthNames[value - 1]}
+            />
+            <YAxis 
+              stroke="hsl(var(--muted-foreground))"
+              label={{ value: 'P&L (R$)', angle: -90, position: 'insideLeft' }}
+            />
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: '8px',
+              }}
+              formatter={(value: number) => formatCurrency(value)}
+              labelFormatter={(label) => monthNames[label - 1]}
+            />
+            <Legend />
+            <Line 
+              type="monotone" 
+              dataKey="profitLoss" 
+              stroke="hsl(var(--chart-2))" 
+              strokeWidth={2}
+              name="P&L"
+              dot={{ fill: 'hsl(var(--chart-2))', r: 4 }}
               activeDot={{ r: 6 }}
             />
           </LineChart>
