@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChartContainer } from '@/components/ui/chart-container';
 import { KpiCard } from '@/components/ui/kpi-card';
+import { FinancialLineChart } from '@/components/charts/financial-line-chart';
 import { 
   loadExcelFile, 
   processCreditExposureData,
@@ -14,8 +15,6 @@ import {
   fillMissingMonths
 } from '@/lib/data-processing';
 import { 
-  BarChart, 
-  Bar, 
   LineChart,
   Line,
   XAxis, 
@@ -23,8 +22,7 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend, 
-  ResponsiveContainer,
-  Cell
+  ResponsiveContainer
 } from 'recharts';
 import {
   Select,
@@ -137,40 +135,45 @@ export function BilateralRiskTab() {
       nSubmarket: number;
     }} = {};
 
-    for (let month = 1; month <= 12; month++) {
-      monthlyData[month] = {
-        energia: 0,
-        convencional: 0,
-        incentivada: 0,
-        seSubmarket: 0,
-        sSubmarket: 0,
-        neSubmarket: 0,
-        nSubmarket: 0,
-      };
-    }
-
     filteredData.forEach(item => {
-      const month = item.month;
-      if (monthlyData[month]) {
-        monthlyData[month].energia += item.energyVolumn || 0;
-        monthlyData[month].convencional += item.conVolumn || 0;
-        monthlyData[month].incentivada += item.sourceVolumn || 0;
-        monthlyData[month].seSubmarket += item.seSubmarketVolumn || 0;
-        monthlyData[month].sSubmarket += item.sSubmarketVolumn || 0;
-        monthlyData[month].neSubmarket += item.neSubmarketVolumn || 0;
-        monthlyData[month].nSubmarket += item.nSubmarketVolumn || 0;
+      if (!monthlyData[item.month]) {
+        monthlyData[item.month] = {
+          energia: 0,
+          convencional: 0,
+          incentivada: 0,
+          seSubmarket: 0,
+          sSubmarket: 0,
+          neSubmarket: 0,
+          nSubmarket: 0,
+        };
       }
+      
+      monthlyData[item.month].energia += item.energyVolumn || 0;
+      monthlyData[item.month].convencional += item.conVolumn || 0;
+      monthlyData[item.month].incentivada += item.sourceVolumn || 0;
+      monthlyData[item.month].seSubmarket += item.seSubmarketVolumn || 0;
+      monthlyData[item.month].sSubmarket += item.sSubmarketVolumn || 0;
+      monthlyData[item.month].neSubmarket += item.neSubmarketVolumn || 0;
+      monthlyData[item.month].nSubmarket += item.nSubmarketVolumn || 0;
     });
 
-    return Object.entries(monthlyData).map(([month, values]) => ({
-      month: parseInt(month),
-      Energia: values.energia,
-      Convencional: values.convencional,
-      Incentivada: values.incentivada,
-      'SE': values.seSubmarket,
-      'S': values.sSubmarket,
-      'NE': values.neSubmarket,
-      'N': values.nSubmarket,
+    return fillMissingMonths(
+      Object.entries(monthlyData).map(([month, data]) => ({
+        month: parseInt(month),
+        year: parseInt(year),
+        ...data,
+      })),
+      parseInt(year),
+      { energia: 0, convencional: 0, incentivada: 0, seSubmarket: 0, sSubmarket: 0, neSubmarket: 0, nSubmarket: 0 }
+    ).map(item => ({
+      month: item.month,
+      energia: item.energia,
+      convencional: item.convencional,
+      incentivada: item.incentivada,
+      seSubmarket: item.seSubmarket,
+      sSubmarket: item.sSubmarket,
+      neSubmarket: item.neSubmarket,
+      nSubmarket: item.nSubmarket,
     }));
   };
 
@@ -370,40 +373,63 @@ export function BilateralRiskTab() {
 
       {/* GRÁFICO 1 - Volumes por tipo de produto */}
       <ChartContainer
-        title="Volumes por tipo de Produto"
-        description="Distribuição mensal de volumes por tipo de energia e submercado"
+        title="Volumes por Tipo de Produto"
+        description="Volume mensal por tipo de produto da contraparte selecionada"
       >
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={volumeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis 
-              dataKey="month" 
-              stroke="hsl(var(--muted-foreground))"
-              tickFormatter={(value) => monthNames[value - 1]}
-            />
-            <YAxis 
-              stroke="hsl(var(--muted-foreground))"
-              label={{ value: 'Volume (MWh)', angle: -90, position: 'insideLeft' }}
-            />
-            <Tooltip 
-              contentStyle={{
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px',
-              }}
-              formatter={(value: number) => formatNumber(value, 2)}
-              labelFormatter={(label) => monthNames[label - 1]}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            <Bar dataKey="Energia" fill="hsl(var(--chart-1))" stackId="a" />
-            <Bar dataKey="Convencional" fill="hsl(var(--chart-2))" stackId="a" />
-            <Bar dataKey="Incentivada" fill="hsl(var(--chart-3))" stackId="a" />
-            <Bar dataKey="SE" fill="hsl(var(--chart-4))" stackId="a" />
-            <Bar dataKey="S" fill="hsl(var(--chart-5))" stackId="a" />
-            <Bar dataKey="NE" fill="hsl(var(--chart-1))" stackId="a" />
-            <Bar dataKey="N" fill="hsl(var(--chart-2))" stackId="a" />
-          </BarChart>
-        </ResponsiveContainer>
+        <FinancialLineChart
+          data={volumeData}
+          lines={[
+            {
+              dataKey: 'energia' as const,
+              stroke: 'hsl(var(--chart-1))',
+              name: 'Energia',
+              unit: 'MWm',
+              format: 'number' as const,
+            },
+            {
+              dataKey: 'convencional' as const,
+              stroke: 'hsl(var(--chart-2))',
+              name: 'Convencional',
+              unit: 'MWm',
+              format: 'number' as const,
+            },
+            {
+              dataKey: 'incentivada' as const,
+              stroke: 'hsl(var(--chart-3))',
+              name: 'Incentivada 50%',
+              unit: 'MWm',
+              format: 'number' as const,
+            },
+            {
+              dataKey: 'seSubmarket' as const,
+              stroke: 'hsl(var(--chart-4))',
+              name: 'Sudeste/Centro-Oeste',
+              unit: 'MWm',
+              format: 'number' as const,
+            },
+            {
+              dataKey: 'sSubmarket' as const,
+              stroke: 'hsl(var(--chart-5))',
+              name: 'Sul',
+              unit: 'MWm',
+              format: 'number' as const,
+            },
+            {
+              dataKey: 'neSubmarket' as const,
+              stroke: 'hsl(var(--destructive))',
+              name: 'Nordeste',
+              unit: 'MWm',
+              format: 'number' as const,
+            },
+            {
+              dataKey: 'nSubmarket' as const,
+              stroke: 'hsl(var(--warning))',
+              name: 'Norte',
+              unit: 'MWm',
+              format: 'number' as const,
+            },
+          ]}
+        />
       </ChartContainer>
 
       {/* GRÁFICO 2 - Potential Future Exposure mensal */}
