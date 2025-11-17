@@ -309,7 +309,7 @@ export function BilateralRiskTab() {
               }
             }}
           >
-            Top P&L (toda carteira)
+            P&L Decrescente
           </Badge>
           <Badge 
             variant={specialFilter === 'above-pl-limit' ? 'default' : 'outline'} 
@@ -447,6 +447,15 @@ export function BilateralRiskTab() {
             />
             <YAxis 
               stroke="hsl(var(--muted-foreground))"
+              tickFormatter={(value) => {
+                if (Math.abs(value) >= 1000000) {
+                  return `${(value / 1000000).toFixed(1)}M`;
+                } else if (Math.abs(value) >= 1000) {
+                  return `${(value / 1000).toFixed(1)}K`;
+                } else {
+                  return value.toFixed(0);
+                }
+              }}
             />
             <Tooltip 
               contentStyle={{
@@ -486,6 +495,15 @@ export function BilateralRiskTab() {
             />
             <YAxis 
               stroke="hsl(var(--muted-foreground))"
+              tickFormatter={(value) => {
+                if (Math.abs(value) >= 1000000) {
+                  return `${(value / 1000000).toFixed(1)}M`;
+                } else if (Math.abs(value) >= 1000) {
+                  return `${(value / 1000).toFixed(1)}K`;
+                } else {
+                  return value.toFixed(0);
+                }
+              }}
             />
             <Tooltip 
               contentStyle={{
