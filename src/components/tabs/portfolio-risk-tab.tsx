@@ -151,7 +151,7 @@ export function PortfolioRiskTab() {
       <div className="space-y-2">
         <h3 className="text-xl font-bold text-foreground">Risco de Portfólio</h3>
         <p className="text-muted-foreground text-sm">
-          Análise da distribuição de Expected Loss por faixa de risco comparada com distribuição alvo de PMA
+          Análise da distribuição de Expected Loss por faixa de risco comparada com distribuição alvo de Perda Máxima Aceitável (PMA)
         </p>
       </div>
 
@@ -262,9 +262,7 @@ export function PortfolioRiskTab() {
       {/* Info Box */}
       <div className="rounded-lg border border-border bg-muted/50 p-4">
         <p className="text-sm text-muted-foreground">
-          <strong>Nota:</strong> Esta análise considera apenas contrapartes com Expected Loss (EL_PFE) positiva, 
-          excluindo contrapartes com rating "ACR" ou "I" (sem risco de crédito). 
-          Valores destacados em vermelho indicam faixas onde o percentual real excede o alvo.
+          <strong>Nota:</strong> Esta análise considera apenas contrapartes com Expected Loss positiva, excluindo contrapartes no ACR e contrapartes internas (sem risco de crédito). Valores destacados em vermelho indicam faixas onde o percentual real excede o alvo.
         </p>
       </div>
     </div>
