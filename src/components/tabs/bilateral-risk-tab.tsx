@@ -93,7 +93,7 @@ export function BilateralRiskTab() {
       case 'above-pl-limit':
         return creditExposureData.filter(d => d.profitLoss_year > d.profitLossLimit);
       case 'above-el-limit':
-        return creditExposureData.filter(d => d.EL_PFE_year > d.profitLossLimit);
+        return creditExposureData.filter(d => d.PFE_year > d.profitLossLimit);
       default:
         return [];
     }
@@ -324,7 +324,7 @@ export function BilateralRiskTab() {
               }
             }}
           >
-            Acima do limite por P&L
+            Limite por P&L
           </Badge>
           <Badge 
             variant={specialFilter === 'above-el-limit' ? 'default' : 'outline'} 
@@ -332,14 +332,14 @@ export function BilateralRiskTab() {
             onClick={() => {
               setSpecialFilter(specialFilter === 'above-el-limit' ? 'none' : 'above-el-limit');
               if (specialFilter !== 'above-el-limit') {
-                const filtered = creditExposureData.filter(d => d.EL_PFE_year > d.profitLossLimit);
+                const filtered = creditExposureData.filter(d => d.PFE_year > d.profitLossLimit);
                 if (filtered.length > 0) {
                   setCounterparty(filtered[0].counterparty);
                 }
               }
             }}
           >
-            Acima do limite por Expected Loss
+            Limite por PFE
           </Badge>
         </div>
       </div>
