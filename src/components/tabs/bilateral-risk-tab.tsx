@@ -373,8 +373,8 @@ export function BilateralRiskTab() {
 
       {/* GRÁFICO 1 - Volumes por tipo de produto */}
       <ChartContainer
-        title="Volumes por Tipo de Produto"
-        description="Volume mensal por tipo de produto da contraparte selecionada"
+        title="Volumes"
+        description="Volumes por produto"
       >
         <FinancialLineChart
           data={volumeData}
@@ -434,7 +434,7 @@ export function BilateralRiskTab() {
 
       {/* GRÁFICO 2 - Potential Future Exposure mensal */}
       <ChartContainer
-        title="Potential Future Exposure (PFE) Mensal"
+        title="Potential Future Exposure (PFE)"
         description="Evolução mensal da Potential Future Exposure"
       >
         <ResponsiveContainer width="100%" height={400}>
@@ -447,7 +447,6 @@ export function BilateralRiskTab() {
             />
             <YAxis 
               stroke="hsl(var(--muted-foreground))"
-              label={{ value: 'PFE (R$)', angle: -90, position: 'insideLeft' }}
             />
             <Tooltip 
               contentStyle={{
@@ -474,7 +473,7 @@ export function BilateralRiskTab() {
 
       {/* GRÁFICO 3 - P&L mensal */}
       <ChartContainer
-        title="P&L Mensal"
+        title="Profit and Loss"
         description="Evolução mensal do P&L"
       >
         <ResponsiveContainer width="100%" height={400}>
@@ -487,7 +486,6 @@ export function BilateralRiskTab() {
             />
             <YAxis 
               stroke="hsl(var(--muted-foreground))"
-              label={{ value: 'P&L (R$)', angle: -90, position: 'insideLeft' }}
             />
             <Tooltip 
               contentStyle={{
