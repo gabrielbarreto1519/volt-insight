@@ -357,7 +357,7 @@ export function BilateralRiskTab() {
             isNegative={kpis.profitLoss < 0}
           />
           <KpiCard
-            title="Potential Future Exposure"
+            title="PFE"
             value={formatCurrency(kpis.pfe)}
           />
           <KpiCard
